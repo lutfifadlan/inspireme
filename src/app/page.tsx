@@ -5,17 +5,46 @@ import { WallpaperPreview } from "@/components/wallpaper-preview";
 import { WallpaperControls } from "@/components/wallpaper-controls";
 import { GridPattern } from "@/components/ui/grid-pattern";
 import { BACKGROUNDS, FONTS, WALLPAPER_PRESETS } from "@/lib/constants";
+import { Loader2 } from "lucide-react";
+import { GradientSettings } from "@/lib/interface";
+
+const LoadingOverlay = ({ message = "Loading..." }) => {
+  return (
+    <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm rounded-xl transition-all duration-300">
+      <Loader2 className="w-8 h-8 text-white animate-spin mb-3" />
+      <span className="text-white font-medium">{message}</span>
+    </div>
+  );
+};
 
 export default function Home() {
+  // Text and Font States
   const [text, setText] = useState("Dream Big, Work Hard");
-  const [selectedBg, setSelectedBg] = useState(BACKGROUNDS[0]);
   const [fontSize, setFontSize] = useState(48);
   const [selectedFont, setSelectedFont] = useState(FONTS[0].value);
-  const [downloading, setDownloading] = useState(false);
-  const [selectedPreset, setSelectedPreset] = useState(WALLPAPER_PRESETS[2]); // FHD by default
-  const [customSize, setCustomSize] = useState({ width: 1920, height: 1080 });
   const [fontWeight, setFontWeight] = useState("font-medium");
   const [fontColor, setFontColor] = useState("#ffffff");
+  
+  // Gradient State
+  const [gradientSettings, setGradientSettings] = useState<GradientSettings>({
+    type: 'solid',
+    stops: [
+      { color: "#ffffff", position: 0 },
+      { color: "#ffffff", position: 100 }
+    ],
+    angle: 45
+  });
+
+  // Background States
+  const [selectedBg, setSelectedBg] = useState(BACKGROUNDS[0]);
+  const [randomizing, setRandomizing] = useState(false);
+  
+  // Size States
+  const [selectedPreset, setSelectedPreset] = useState(WALLPAPER_PRESETS[2]); // FHD by default
+  const [customSize, setCustomSize] = useState({ width: 1920, height: 1080 });
+  
+  // Download State
+  const [downloading, setDownloading] = useState(false);
 
   const handleTextChange = (e: ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
@@ -41,6 +70,33 @@ export default function Home() {
       return weightMap[fontWeight] || '400';
     };
 
+    const createGradient = (ctx: CanvasRenderingContext2D, width: number, height: number) => {
+      if (!gradientSettings || gradientSettings.type === 'solid') {
+        return fontColor;
+      }
+
+      let gradient;
+      if (gradientSettings.type === 'linear') {
+        const angle = (gradientSettings.angle || 0) * Math.PI / 180;
+        const x1 = width / 2 - Math.cos(angle) * width;
+        const y1 = height / 2 - Math.sin(angle) * height;
+        const x2 = width / 2 + Math.cos(angle) * width;
+        const y2 = height / 2 + Math.sin(angle) * height;
+        gradient = ctx.createLinearGradient(x1, y1, x2, y2);
+      } else {
+        gradient = ctx.createRadialGradient(
+          width / 2, height / 2, 0,
+          width / 2, height / 2, width / 2
+        );
+      }
+
+      gradientSettings.stops.forEach(stop => {
+        gradient.addColorStop(stop.position / 100, stop.color);
+      });
+
+      return gradient;
+    };
+
     const fontFamily = selectedFont.replace('font-', '');
 
     img.crossOrigin = "anonymous";
@@ -55,10 +111,10 @@ export default function Home() {
       ctx!.fillStyle = "rgba(0, 0, 0, 0.4)";
       ctx!.fillRect(0, 0, canvas.width, canvas.height);
 
-      ctx!.fillStyle = fontColor;
       ctx!.font = `${getFontWeight()} ${fontSize}px ${fontFamily}`;
       ctx!.textAlign = "center";
       ctx!.textBaseline = "middle";
+      ctx!.fillStyle = createGradient(ctx!, canvas.width, canvas.height);
 
       const maxWidth = canvas.width * 0.9;
       const words = text.split(' ');
@@ -93,12 +149,27 @@ export default function Home() {
     };
   };
 
-  const handleRandomBackground = () => {
-    let newBg;
-    do {
-      newBg = BACKGROUNDS[Math.floor(Math.random() * BACKGROUNDS.length)];
-    } while (newBg === selectedBg);
-    setSelectedBg(newBg);
+  const handleRandomBackground = async () => {
+    setRandomizing(true);
+    
+    try {
+      const availableBackgrounds = BACKGROUNDS.filter(bg => bg !== selectedBg);
+      const randomBg = availableBackgrounds[Math.floor(Math.random() * availableBackgrounds.length)];
+      
+      await new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = resolve;
+        img.onerror = reject;
+        img.src = randomBg;
+        setTimeout(() => reject(new Error('Image loading timeout')), 10000);
+      });
+      
+      setSelectedBg(randomBg);
+    } catch (error) {
+      console.error('Error loading random background:', error);
+    } finally {
+      setRandomizing(false);
+    }
   };
 
   const handleCustomBackground = (file: File) => {
@@ -144,9 +215,12 @@ export default function Home() {
                 selectedFont={selectedFont}
                 fontWeight={fontWeight}
                 fontColor={fontColor}
+                gradientSettings={gradientSettings}
                 selectedPreset={selectedPreset}
                 customSize={customSize}
               />
+              {randomizing && <LoadingOverlay message="Loading new background..." />}
+              {downloading && <LoadingOverlay message="Generating wallpaper..." />}
             </div>
           </div>
           
@@ -158,6 +232,12 @@ export default function Home() {
               onFontSizeChange={setFontSize}
               selectedFont={selectedFont}
               onFontChange={setSelectedFont}
+              fontWeight={fontWeight}
+              onFontWeightChange={setFontWeight}
+              fontColor={fontColor}
+              onFontColorChange={setFontColor}
+              gradientSettings={gradientSettings}
+              onGradientChange={setGradientSettings}
               onRandomBackground={handleRandomBackground}
               onDownload={handleDownload}
               downloading={downloading}
@@ -166,10 +246,8 @@ export default function Home() {
               onPresetChange={handlePresetChange}
               customSize={customSize}
               onCustomSizeChange={handleCustomSizeChange}
-              fontWeight={fontWeight}
-              onFontWeightChange={setFontWeight}
-              fontColor={fontColor}
-              onFontColorChange={setFontColor}
+              selectedBg={selectedBg}
+              onBackgroundChange={setSelectedBg}
             />
           </div>
         </div>

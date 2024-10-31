@@ -1,3 +1,5 @@
+import { GradientSettings } from "./interface";
+
 export const BACKGROUNDS = [
   "https://images.unsplash.com/photo-1469474968028-56623f02e42e",
   "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b",
@@ -7,6 +9,26 @@ export const BACKGROUNDS = [
   "https://images.unsplash.com/photo-1682686580391-615b1f28e5ee",
   "https://images.unsplash.com/photo-1682687982501-1e58ab814714",
   "https://images.unsplash.com/photo-1682687220742-aba13b6e50ba",
+  "https://images.unsplash.com/photo-1506905925346-21bda4d32df4",
+  "https://images.unsplash.com/photo-1540206395-68808572332f",
+  "https://images.unsplash.com/photo-1502481851512-e9e2529bfbf9",
+  "https://images.unsplash.com/photo-1476673160081-cf065607f449",
+  "https://images.unsplash.com/photo-1509114397022-ed747cca3f65",
+  "https://images.unsplash.com/photo-1566024287286-457247b70310",
+  "https://images.unsplash.com/photo-1557683311-eac922347aa1",
+  "https://images.unsplash.com/photo-1579546929518-9e396f3cc809",
+  "https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d",
+  "https://images.unsplash.com/photo-1505322022379-7c3353ee6291",
+  "https://images.unsplash.com/photo-1517685352821-92cf88aee5a5",
+  "https://images.unsplash.com/photo-1536152470836-b943b246224c",
+  "https://images.unsplash.com/photo-1519681393784-d120267933ba",
+  "https://images.unsplash.com/photo-1493246507139-91e8fad9978e",
+  "https://images.unsplash.com/photo-1682686581580-d99b0230064e",
+  "https://images.unsplash.com/photo-1682687220742-aba13b6e50ba",
+  "https://images.unsplash.com/photo-1462332420958-a05d1e002413",
+  "https://images.unsplash.com/photo-1419242902214-272b3f66ee7a",
+  "https://images.unsplash.com/photo-1495616811223-4d98c6e9c869",
+  "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b",
 ];
 
 export const FONTS = [
@@ -26,7 +48,7 @@ export const MOTIVATIONAL_QUOTES = [
   "Dream big, work hard, stay focused",
   "Your only limit is your mind",
   "Make today amazing",
-  "Success is built one day at a time",
+  "Success is built one day at a time", 
   "Push yourself, because no one else is going to do it for you",
   "The future belongs to those who believe in the beauty of their dreams",
   "Your potential is endless",
@@ -48,6 +70,26 @@ export const MOTIVATIONAL_QUOTES = [
   "Make yourself proud",
   "The only bad workout is the one that didn't happen",
   "Discipline is choosing between what you want now and what you want most",
+  "Turn your wounds into wisdom",
+  "The journey of a thousand miles begins with one step",
+  "What doesn't kill you makes you stronger",
+  "Life is 10% what happens to you and 90% how you react to it",
+  "Be the change you wish to see in the world",
+  "Yesterday you said tomorrow",
+  "Nothing is impossible, the word itself says 'I'm possible'",
+  "Don't wait for opportunity, create it",
+  "Fall seven times, stand up eight",
+  "The best revenge is massive success",
+  "If not now, when?",
+  "Do what you have to do until you can do what you want to do",
+  "Everything you've ever wanted is on the other side of fear",
+  "Success is not final, failure is not fatal",
+  "The past cannot be changed, but the future is yet in your power",
+  "You miss 100% of the shots you don't take",
+  "It always seems impossible until it's done",
+  "The only way to do great work is to love what you do",
+  "Don't count the days, make the days count",
+  "Champions keep playing until they get it right",
 ];
 
 export const WALLPAPER_PRESETS = [
@@ -103,3 +145,50 @@ export const WALLPAPER_PRESETS = [
 
 export const MAX_FONT_SIZE = 400;
 export const MIN_FONT_SIZE = 1;
+
+export const GRADIENT_PRESETS: { label: string; value: GradientSettings }[] = [
+  {
+    label: "Sunset",
+    value: {
+      type: "linear",
+      angle: 45,
+      stops: [
+        { color: "#FF512F", position: 0 },
+        { color: "#F09819", position: 100 }
+      ]
+    }
+  },
+  {
+    label: "Ocean",
+    value: {
+      type: "linear",
+      angle: 45,
+      stops: [
+        { color: "#2193b0", position: 0 },
+        { color: "#6dd5ed", position: 100 }
+      ]
+    }
+  },
+  {
+    label: "Purple Rain",
+    value: {
+      type: "linear",
+      angle: 45,
+      stops: [
+        { color: "#8E2DE2", position: 0 },
+        { color: "#4A00E0", position: 100 }
+      ]
+    }
+  },
+  {
+    label: "Forest",
+    value: {
+      type: "linear",
+      angle: 45,
+      stops: [
+        { color: "#134E5E", position: 0 },
+        { color: "#71B280", position: 100 }
+      ]
+    }
+  }
+];

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { WALLPAPER_PRESETS } from "@/lib/constants";
+import { GradientSettings } from '@/lib/interface';
 
 interface WallpaperPreviewProps {
   backgroundUrl: string;
@@ -8,6 +9,7 @@ interface WallpaperPreviewProps {
   selectedFont: string;
   fontWeight: string;
   fontColor: string;
+  gradientSettings: GradientSettings;
   selectedPreset: typeof WALLPAPER_PRESETS[0];
   customSize?: { width: number; height: number };
 }
@@ -19,6 +21,7 @@ export function WallpaperPreview({
   selectedFont,
   fontWeight,
   fontColor,
+  gradientSettings,
   selectedPreset,
   customSize,
 }: WallpaperPreviewProps) {
@@ -38,6 +41,33 @@ export function WallpaperPreview({
     return weightMap[fontWeight] || '400';
   };
 
+  const createGradient = (ctx: CanvasRenderingContext2D, width: number, height: number) => {
+    if (!gradientSettings || gradientSettings.type === 'solid') {
+      return fontColor;
+    }
+
+    let gradient;
+    if (gradientSettings.type === 'linear') {
+      const angle = (gradientSettings.angle || 0) * Math.PI / 180;
+      const x1 = width / 2 - Math.cos(angle) * width;
+      const y1 = height / 2 - Math.sin(angle) * height;
+      const x2 = width / 2 + Math.cos(angle) * width;
+      const y2 = height / 2 + Math.sin(angle) * height;
+      gradient = ctx.createLinearGradient(x1, y1, x2, y2);
+    } else {
+      gradient = ctx.createRadialGradient(
+        width / 2, height / 2, 0,
+        width / 2, height / 2, width / 2
+      );
+    }
+
+    gradientSettings.stops.forEach(stop => {
+      gradient.addColorStop(stop.position / 100, stop.color);
+    });
+
+    return gradient;
+  };
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -53,30 +83,23 @@ export function WallpaperPreview({
       const size = selectedPreset.id === "custom" ? customSize : selectedPreset;
       if (!size) return;
 
-      // Set canvas size based on the aspect ratio
       const containerWidth = canvas.offsetWidth;
       const scale = containerWidth / size.width;
       canvas.width = size.width * scale;
       canvas.height = size.height * scale;
 
-      // Scale everything proportionally
       const scaledFontSize = fontSize * scale;
 
-      // Draw background image
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      
-      // Add overlay
       ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Configure text settings
       const fontFamily = selectedFont.replace('font-', '');
-      ctx.fillStyle = fontColor;
       ctx.font = `${getFontWeight()} ${scaledFontSize}px ${fontFamily}`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
+      ctx.fillStyle = createGradient(ctx, canvas.width, canvas.height);
 
-      // Handle text wrapping
       const maxWidth = canvas.width * 0.9;
       const words = text.split(' ');
       const lines = [];
@@ -94,7 +117,6 @@ export function WallpaperPreview({
       }
       lines.push(currentLine);
 
-      // Draw text
       const lineHeight = scaledFontSize * 1.2;
       const totalHeight = lines.length * lineHeight;
       const startY = (canvas.height - totalHeight) / 2;
@@ -107,14 +129,11 @@ export function WallpaperPreview({
         );
       });
     };
-  }, [backgroundUrl, text, fontSize, selectedFont, fontWeight, fontColor, selectedPreset, customSize]);
+  }, [backgroundUrl, text, fontSize, selectedFont, fontWeight, fontColor, gradientSettings, selectedPreset, customSize]);
 
   return (
     <div className="relative aspect-video rounded-xl overflow-hidden shadow-2xl ring-1 ring-border/20">
-      <canvas
-        ref={canvasRef}
-        className="w-full h-full"
-      />
+      <canvas ref={canvasRef} className="w-full h-full" />
     </div>
   );
 }
