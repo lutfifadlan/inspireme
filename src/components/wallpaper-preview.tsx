@@ -7,6 +7,8 @@ interface WallpaperPreviewProps {
   text: string;
   fontSize: number;
   selectedFont: string;
+  fontWeight: string;
+  fontColor: string;
 }
 
 export function WallpaperPreview({
@@ -14,6 +16,8 @@ export function WallpaperPreview({
   text,
   fontSize,
   selectedFont,
+  fontWeight,
+  fontColor,
 }: WallpaperPreviewProps) {
   return (
     <div className="relative aspect-video rounded-xl overflow-hidden shadow-2xl ring-1 ring-border/20 backdrop-blur-sm">
@@ -27,8 +31,11 @@ export function WallpaperPreview({
       <div className="absolute inset-0 bg-black/40" />
       <div className="absolute inset-0 flex items-center justify-center p-8">
         <p
-          className={`text-center text-white ${selectedFont} drop-shadow-lg`}
-          style={{ fontSize: `${fontSize}px` }}
+          className={`text-center ${selectedFont} ${fontWeight} drop-shadow-lg`}
+          style={{ 
+            fontSize: `${fontSize}px`,
+            color: fontColor
+          }}
         >
           {text}
         </p>
