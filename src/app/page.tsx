@@ -3,7 +3,6 @@
 import { useState, ChangeEvent } from "react";
 import { WallpaperPreview } from "@/components/wallpaper-preview";
 import { WallpaperControls } from "@/components/wallpaper-controls";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { GridPattern } from "@/components/ui/grid-pattern";
 import { BACKGROUNDS, FONTS, WALLPAPER_PRESETS } from "@/lib/constants";
 
@@ -77,14 +76,13 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-background/95 transition-colors duration-300 relative">
       <GridPattern strokeDasharray={"4 2"} />
-      <ThemeToggle />
       <div className="container mx-auto px-4 py-12 relative z-10">
-        <div className="text-center space-y-4 mb-12">
+        <div className="text-center space-y-4 mt-6 mb-10">
           <div className="space-y-2">
-            <h1 className="text-4xl sm:text-5xl font-bold text-foreground">
-              Motivation Wallpaper Generator
+            <h1 className="text-5xl sm:text-6xl font-bold bg-gradient-to-r from-black/90 to-primary/60 bg-clip-text text-transparent dark:from-primary/80 dark:to-secondary/80">
+              Motivational Wallpaper Generator
             </h1>
-            <p className="text-muted-foreground text-lg max-w-[600px] mx-auto">
+            <p className="text-muted-foreground text-lg mx-auto">
               Create beautiful wallpapers with inspiring quotes that will keep you motivated throughout your day.
             </p>
           </div>
