@@ -100,3 +100,6 @@ export const WALLPAPER_PRESETS = [
     height: 1080,
   },
 ];
+
+export const MAX_FONT_SIZE = 400;
+export const MIN_FONT_SIZE = 1;

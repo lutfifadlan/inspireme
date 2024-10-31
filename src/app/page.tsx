@@ -9,7 +9,7 @@ import { BACKGROUNDS, FONTS, WALLPAPER_PRESETS } from "@/lib/constants";
 export default function Home() {
   const [text, setText] = useState("Dream Big, Work Hard");
   const [selectedBg, setSelectedBg] = useState(BACKGROUNDS[0]);
-  const [fontSize, setFontSize] = useState([48]);
+  const [fontSize, setFontSize] = useState(48);
   const [selectedFont, setSelectedFont] = useState(FONTS[0].value);
   const [downloading, setDownloading] = useState(false);
   const [selectedPreset, setSelectedPreset] = useState(WALLPAPER_PRESETS[2]); // FHD by default
@@ -27,6 +27,22 @@ export default function Home() {
     const ctx = canvas.getContext("2d");
     const img = new Image();
 
+    const getFontWeight = () => {
+      const weightMap: { [key: string]: string } = {
+        'font-thin': '100',
+        'font-light': '300',
+        'font-normal': '400',
+        'font-medium': '500',
+        'font-semibold': '600',
+        'font-bold': '700',
+        'font-extrabold': '800',
+        'font-black': '900'
+      };
+      return weightMap[fontWeight] || '400';
+    };
+
+    const fontFamily = selectedFont.replace('font-', '');
+
     img.crossOrigin = "anonymous";
     img.src = selectedBg;
 
@@ -39,14 +55,38 @@ export default function Home() {
       ctx!.fillStyle = "rgba(0, 0, 0, 0.4)";
       ctx!.fillRect(0, 0, canvas.width, canvas.height);
 
-      ctx!.fillStyle = "white";
-      ctx!.font = `${fontSize}px ${selectedFont.replace("font-", "")}`;
+      ctx!.fillStyle = fontColor;
+      ctx!.font = `${getFontWeight()} ${fontSize}px ${fontFamily}`;
       ctx!.textAlign = "center";
       ctx!.textBaseline = "middle";
-      ctx!.fillText(text, canvas.width / 2, canvas.height / 2);
+
+      const maxWidth = canvas.width * 0.9;
+      const words = text.split(' ');
+      const lines = [];
+      let currentLine = words[0];
+
+      for (let i = 1; i < words.length; i++) {
+        const word = words[i];
+        const width = ctx!.measureText(currentLine + " " + word).width;
+        if (width < maxWidth) {
+          currentLine += " " + word;
+        } else {
+          lines.push(currentLine);
+          currentLine = word;
+        }
+      }
+      lines.push(currentLine);
+
+      const lineHeight = fontSize * 1.2;
+      const totalHeight = lines.length * lineHeight;
+      const startY = (canvas.height - totalHeight) / 2;
+
+      lines.forEach((line, index) => {
+        ctx!.fillText(line, canvas.width / 2, startY + (index * lineHeight) + lineHeight / 2);
+      });
 
       const link = document.createElement("a");
-      link.download = "motivation-wallpaper.png";
+      link.download = "inspire-me.png";
       link.href = canvas.toDataURL("image/png");
       link.click();
       setDownloading(false);
@@ -100,10 +140,12 @@ export default function Home() {
               <WallpaperPreview
                 backgroundUrl={selectedBg}
                 text={text}
-                fontSize={fontSize[0]}
+                fontSize={fontSize}
                 selectedFont={selectedFont}
                 fontWeight={fontWeight}
                 fontColor={fontColor}
+                selectedPreset={selectedPreset}
+                customSize={customSize}
               />
             </div>
           </div>
