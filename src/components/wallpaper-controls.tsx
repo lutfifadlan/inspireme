@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FONTS, MOTIVATIONAL_QUOTES, WALLPAPER_PRESETS } from "@/lib/constants";
+import { FONTS, MOTIVATIONAL_QUOTES, WALLPAPER_PRESETS, MAX_FONT_SIZE, MIN_FONT_SIZE } from "@/lib/constants";
 import { Separator } from "@/components/ui/separator";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -21,8 +21,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 interface WallpaperControlsProps {
   text: string;
   onTextChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  fontSize: number[];
-  onFontSizeChange: (value: number[]) => void;
+  fontSize: number;
+  onFontSizeChange: (value: number) => void;
   selectedFont: string;
   onFontChange: (value: string) => void;
   fontWeight: string;
@@ -60,6 +60,7 @@ export function WallpaperControls({
   onCustomSizeChange,
 }: WallpaperControlsProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
   const FONT_WEIGHTS = [
     { value: "font-thin", label: "Thin" },
     { value: "font-light", label: "Light" },
@@ -135,15 +136,17 @@ export function WallpaperControls({
             <div>
               <label className="text-sm text-muted-foreground block mb-2">Font Size</label>
               <Slider
-                value={fontSize}
-                onValueChange={onFontSizeChange}
-                min={20}
-                max={80}
+                value={[fontSize]}
+                onValueChange={(values) => onFontSizeChange(values[0])}
+                min={MIN_FONT_SIZE}
+                max={MAX_FONT_SIZE}
                 step={1}
                 className="py-4"
               />
             </div>
+          </div>
 
+          <div className="grid grid-cols-3 gap-4">
             <div>
               <label className="text-sm text-muted-foreground block mb-2">Font Family</label>
               <Select value={selectedFont} onValueChange={onFontChange}>
@@ -159,33 +162,33 @@ export function WallpaperControls({
                 </SelectContent>
               </Select>
             </div>
-          </div>
 
-          <div>
-            <label className="text-sm text-muted-foreground block mb-2">Font Weight</label>
-            <Select value={fontWeight} onValueChange={onFontWeightChange}>
-              <SelectTrigger className="bg-background/50">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {FONT_WEIGHTS.map((weight) => (
-                  <SelectItem key={weight.value} value={weight.value}>
-                    <span className={weight.value}>{weight.label}</span>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+            <div>
+              <label className="text-sm text-muted-foreground block mb-2">Font Weight</label>
+              <Select value={fontWeight} onValueChange={onFontWeightChange}>
+                <SelectTrigger className="bg-background/50">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {FONT_WEIGHTS.map((weight) => (
+                    <SelectItem key={weight.value} value={weight.value}>
+                      <span className={weight.value}>{weight.label}</span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-          <div>
-            <label className="text-sm text-muted-foreground block mb-2">Font Color</label>
-            <div className="p-2 bg-background/50 rounded-md">
-              <Input
-                type="color"
-                value={fontColor}
-                onChange={(e) => onFontColorChange(e.target.value)}
-                className="w-full h-10 cursor-pointer"
-              />
+            <div>
+              <label className="text-sm text-muted-foreground block mb-2">Font Color</label>
+              <div className="bg-background/50 rounded-md">
+                <Input
+                  type="color"
+                  value={fontColor}
+                  onChange={(e) => onFontColorChange(e.target.value)}
+                  className="w-full cursor-pointer"
+                />
+              </div>
             </div>
           </div>
         </div>
