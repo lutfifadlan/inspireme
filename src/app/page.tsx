@@ -14,6 +14,8 @@ export default function Home() {
   const [downloading, setDownloading] = useState(false);
   const [selectedPreset, setSelectedPreset] = useState(WALLPAPER_PRESETS[2]); // FHD by default
   const [customSize, setCustomSize] = useState({ width: 1920, height: 1080 });
+  const [fontWeight, setFontWeight] = useState("font-medium");
+  const [fontColor, setFontColor] = useState("#ffffff");
 
   const handleTextChange = (e: ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
@@ -52,7 +54,10 @@ export default function Home() {
   };
 
   const handleRandomBackground = () => {
-    const newBg = BACKGROUNDS[Math.floor(Math.random() * BACKGROUNDS.length)];
+    let newBg;
+    do {
+      newBg = BACKGROUNDS[Math.floor(Math.random() * BACKGROUNDS.length)];
+    } while (newBg === selectedBg);
     setSelectedBg(newBg);
   };
 
@@ -97,6 +102,8 @@ export default function Home() {
                 text={text}
                 fontSize={fontSize[0]}
                 selectedFont={selectedFont}
+                fontWeight={fontWeight}
+                fontColor={fontColor}
               />
             </div>
           </div>
@@ -117,6 +124,10 @@ export default function Home() {
               onPresetChange={handlePresetChange}
               customSize={customSize}
               onCustomSizeChange={handleCustomSizeChange}
+              fontWeight={fontWeight}
+              onFontWeightChange={setFontWeight}
+              fontColor={fontColor}
+              onFontColorChange={setFontColor}
             />
           </div>
         </div>

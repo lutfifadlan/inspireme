@@ -25,6 +25,10 @@ interface WallpaperControlsProps {
   onFontSizeChange: (value: number[]) => void;
   selectedFont: string;
   onFontChange: (value: string) => void;
+  fontWeight: string;
+  onFontWeightChange: (value: string) => void;
+  fontColor: string;
+  onFontColorChange: (value: string) => void;
   onRandomBackground: () => void;
   onDownload: () => void;
   downloading: boolean;
@@ -42,6 +46,10 @@ export function WallpaperControls({
   onFontSizeChange,
   selectedFont,
   onFontChange,
+  fontWeight,
+  onFontWeightChange,
+  fontColor,
+  onFontColorChange,
   onRandomBackground,
   onDownload,
   downloading,
@@ -52,6 +60,16 @@ export function WallpaperControls({
   onCustomSizeChange,
 }: WallpaperControlsProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const FONT_WEIGHTS = [
+    { value: "font-thin", label: "Thin" },
+    { value: "font-light", label: "Light" },
+    { value: "font-normal", label: "Regular" },
+    { value: "font-medium", label: "Medium" },
+    { value: "font-semibold", label: "Semibold" },
+    { value: "font-bold", label: "Bold" },
+    { value: "font-extrabold", label: "Extra Bold" },
+    { value: "font-black", label: "Black" },
+  ];
 
   const handleRandomQuote = () => {
     const randomQuote = MOTIVATIONAL_QUOTES[Math.floor(Math.random() * MOTIVATIONAL_QUOTES.length)];
@@ -140,6 +158,34 @@ export function WallpaperControls({
                   ))}
                 </SelectContent>
               </Select>
+            </div>
+          </div>
+
+          <div>
+            <label className="text-sm text-muted-foreground block mb-2">Font Weight</label>
+            <Select value={fontWeight} onValueChange={onFontWeightChange}>
+              <SelectTrigger className="bg-background/50">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {FONT_WEIGHTS.map((weight) => (
+                  <SelectItem key={weight.value} value={weight.value}>
+                    <span className={weight.value}>{weight.label}</span>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <label className="text-sm text-muted-foreground block mb-2">Font Color</label>
+            <div className="p-2 bg-background/50 rounded-md">
+              <Input
+                type="color"
+                value={fontColor}
+                onChange={(e) => onFontColorChange(e.target.value)}
+                className="w-full h-10 cursor-pointer"
+              />
             </div>
           </div>
         </div>
