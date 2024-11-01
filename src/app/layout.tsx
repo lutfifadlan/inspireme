@@ -7,7 +7,7 @@ import { Footer } from '@/components/footer';
 import { fontVariables } from '@/lib/fonts';
 
 export const metadata: Metadata = {
-  title: 'InspireMe - Motivation Wallpaper Generator',
+  title: 'InspireMe',
   description: 'Create beautiful wallpapers with inspiring quotes that will keep you motivated throughout your day.',
   icons: {
     icon: '/logo.png',
