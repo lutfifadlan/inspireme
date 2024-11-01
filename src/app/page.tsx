@@ -4,9 +4,10 @@ import { useState, ChangeEvent } from "react";
 import { WallpaperPreview } from "@/components/wallpaper-preview";
 import { WallpaperControls } from "@/components/wallpaper-controls";
 import { GridPattern } from "@/components/ui/grid-pattern";
-import { BACKGROUNDS, FONTS, WALLPAPER_PRESETS } from "@/lib/constants";
+import { BACKGROUNDS, FONTS, WALLPAPER_PRESETS, GRADIENT_PRESETS } from "@/lib/constants";
 import { Loader2 } from "lucide-react";
 import { GradientSettings } from "@/lib/interface";
+import { CANVAS_FONT_MAPPING } from '@/lib/fonts';
 
 const LoadingOverlay = ({ message = "Loading..." }) => {
   return (
@@ -17,10 +18,25 @@ const LoadingOverlay = ({ message = "Loading..." }) => {
   );
 };
 
+// Helper function to get font weight value
+const getFontWeight = (fontWeight: string) => {
+  const weightMap: { [key: string]: string } = {
+    'font-thin': '100',
+    'font-light': '300',
+    'font-normal': '400',
+    'font-medium': '500',
+    'font-semibold': '600',
+    'font-bold': '700',
+    'font-extrabold': '800',
+    'font-black': '900'
+  };
+  return weightMap[fontWeight] || '400';
+};
+
 export default function Home() {
   // Text and Font States
   const [text, setText] = useState("Dream Big, Work Hard");
-  const [fontSize, setFontSize] = useState(48);
+  const [fontSize, setFontSize] = useState(50);
   const [selectedFont, setSelectedFont] = useState(FONTS[0].value);
   const [fontWeight, setFontWeight] = useState("font-medium");
   const [fontColor, setFontColor] = useState("#ffffff");
@@ -37,6 +53,8 @@ export default function Home() {
 
   // Background States
   const [selectedBg, setSelectedBg] = useState(BACKGROUNDS[0]);
+  const [backgroundType, setBackgroundType] = useState<'image' | 'color' | 'gradient'>('image');
+  const [bgGradientSettings, setBgGradientSettings] = useState<GradientSettings>(GRADIENT_PRESETS[0].value);
   const [randomizing, setRandomizing] = useState(false);
   
   // Size States
@@ -50,80 +68,141 @@ export default function Home() {
     setText(e.target.value);
   };
 
+  const handleRandomBackground = async () => {
+    setRandomizing(true);
+    
+    try {
+      if (backgroundType === 'image') {
+        const availableBackgrounds = BACKGROUNDS.filter(bg => bg !== selectedBg);
+        const randomBg = availableBackgrounds[Math.floor(Math.random() * availableBackgrounds.length)];
+        
+        await new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = resolve;
+          img.onerror = reject;
+          img.src = randomBg;
+          setTimeout(() => reject(new Error('Image loading timeout')), 10000);
+        });
+        
+        setSelectedBg(randomBg);
+      } else if (backgroundType === 'color') {
+        const colors = ['#1a1a1a', '#2c3e50', '#34495e', '#16a085', '#27ae60', '#2980b9', '#8e44ad'];
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+        setSelectedBg(randomColor);
+      } else {
+        const randomGradient = GRADIENT_PRESETS[Math.floor(Math.random() * GRADIENT_PRESETS.length)];
+        setBgGradientSettings(randomGradient.value);
+      }
+    } catch (error) {
+      console.error('Error loading random background:', error);
+    } finally {
+      setRandomizing(false);
+    }
+  };
+
   const handleDownload = async () => {
     setDownloading(true);
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
-    const img = new Image();
+    if (!ctx) {
+      setDownloading(false);
+      return;
+    }
 
-    const getFontWeight = () => {
-      const weightMap: { [key: string]: string } = {
-        'font-thin': '100',
-        'font-light': '300',
-        'font-normal': '400',
-        'font-medium': '500',
-        'font-semibold': '600',
-        'font-bold': '700',
-        'font-extrabold': '800',
-        'font-black': '900'
-      };
-      return weightMap[fontWeight] || '400';
-    };
+    const size = selectedPreset.id === "custom" ? customSize : selectedPreset;
+    canvas.width = size.width;
+    canvas.height = size.height;
 
-    const createGradient = (ctx: CanvasRenderingContext2D, width: number, height: number) => {
-      if (!gradientSettings || gradientSettings.type === 'solid') {
-        return fontColor;
-      }
-
-      let gradient;
-      if (gradientSettings.type === 'linear') {
-        const angle = (gradientSettings.angle || 0) * Math.PI / 180;
-        const x1 = width / 2 - Math.cos(angle) * width;
-        const y1 = height / 2 - Math.sin(angle) * height;
-        const x2 = width / 2 + Math.cos(angle) * width;
-        const y2 = height / 2 + Math.sin(angle) * height;
-        gradient = ctx.createLinearGradient(x1, y1, x2, y2);
+    try {
+      // Draw background
+      if (backgroundType === 'image') {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.src = selectedBg;
+        await new Promise((resolve, reject) => {
+          img.onload = resolve;
+          img.onerror = reject;
+          setTimeout(() => reject(new Error('Image loading timeout')), 10000);
+        });
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        
+        // Add overlay for image backgrounds
+        ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      } else if (backgroundType === 'color') {
+        ctx.fillStyle = selectedBg;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
       } else {
-        gradient = ctx.createRadialGradient(
-          width / 2, height / 2, 0,
-          width / 2, height / 2, width / 2
-        );
+        // Draw gradient background
+        const { type, angle, stops } = bgGradientSettings;
+        let gradient;
+        
+        if (type === 'linear') {
+          const angleRad = (angle || 0) * Math.PI / 180;
+          const x1 = canvas.width / 2 - Math.cos(angleRad) * canvas.width;
+          const y1 = canvas.height / 2 - Math.sin(angleRad) * canvas.height;
+          const x2 = canvas.width / 2 + Math.cos(angleRad) * canvas.width;
+          const y2 = canvas.height / 2 + Math.sin(angleRad) * canvas.height;
+          gradient = ctx.createLinearGradient(x1, y1, x2, y2);
+        } else {
+          gradient = ctx.createRadialGradient(
+            canvas.width / 2, canvas.height / 2, 0,
+            canvas.width / 2, canvas.height / 2, canvas.width / 2
+          );
+        }
+
+        stops.forEach(stop => {
+          gradient.addColorStop(stop.position / 100, stop.color);
+        });
+
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
       }
 
-      gradientSettings.stops.forEach(stop => {
-        gradient.addColorStop(stop.position / 100, stop.color);
-      });
+      // Set up text rendering
+      const weight = getFontWeight(fontWeight);
+      const fontName = CANVAS_FONT_MAPPING[selectedFont as keyof typeof CANVAS_FONT_MAPPING] || 'Arial';
+      ctx.font = `${weight} ${fontSize}px "${fontName}"`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
 
-      return gradient;
-    };
+      // Set up text gradient or color
+      if (gradientSettings.type === 'solid') {
+        ctx.fillStyle = fontColor;
+      } else {
+        const { type, angle, stops } = gradientSettings;
+        let gradient;
+        
+        if (type === 'linear') {
+          const angleRad = (angle || 0) * Math.PI / 180;
+          const x1 = canvas.width / 2 - Math.cos(angleRad) * canvas.width;
+          const y1 = canvas.height / 2 - Math.sin(angleRad) * canvas.height;
+          const x2 = canvas.width / 2 + Math.cos(angleRad) * canvas.width;
+          const y2 = canvas.height / 2 + Math.sin(angleRad) * canvas.height;
+          gradient = ctx.createLinearGradient(x1, y1, x2, y2);
+        } else {
+          gradient = ctx.createRadialGradient(
+            canvas.width / 2, canvas.height / 2, 0,
+            canvas.width / 2, canvas.height / 2, canvas.width / 2
+          );
+        }
 
-    const fontFamily = selectedFont.replace('font-', '');
+        stops.forEach(stop => {
+          gradient.addColorStop(stop.position / 100, stop.color);
+        });
 
-    img.crossOrigin = "anonymous";
-    img.src = selectedBg;
+        ctx.fillStyle = gradient;
+      }
 
-    img.onload = () => {
-      const size = selectedPreset.id === "custom" ? customSize : selectedPreset;
-      canvas.width = size.width;
-      canvas.height = size.height;
-
-      ctx!.drawImage(img, 0, 0, canvas.width, canvas.height);
-      ctx!.fillStyle = "rgba(0, 0, 0, 0.4)";
-      ctx!.fillRect(0, 0, canvas.width, canvas.height);
-
-      ctx!.font = `${getFontWeight()} ${fontSize}px ${fontFamily}`;
-      ctx!.textAlign = "center";
-      ctx!.textBaseline = "middle";
-      ctx!.fillStyle = createGradient(ctx!, canvas.width, canvas.height);
-
-      const maxWidth = canvas.width * 0.9;
+      // Calculate text wrapping
+      const maxWidth = canvas.width * 0.8;
       const words = text.split(' ');
       const lines = [];
       let currentLine = words[0];
 
       for (let i = 1; i < words.length; i++) {
         const word = words[i];
-        const width = ctx!.measureText(currentLine + " " + word).width;
+        const width = ctx.measureText(currentLine + " " + word).width;
         if (width < maxWidth) {
           currentLine += " " + word;
         } else {
@@ -133,48 +212,45 @@ export default function Home() {
       }
       lines.push(currentLine);
 
-      const lineHeight = fontSize * 1.2;
+      // Add text shadow
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+      ctx.shadowBlur = fontSize / 8;
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 0;
+
+      // Draw text
+      const lineHeight = fontSize * 1.4;
       const totalHeight = lines.length * lineHeight;
-      const startY = (canvas.height - totalHeight) / 2;
+      const startY = (canvas.height - totalHeight) / 2 + (lineHeight / 2);
 
       lines.forEach((line, index) => {
-        ctx!.fillText(line, canvas.width / 2, startY + (index * lineHeight) + lineHeight / 2);
+        ctx.fillText(
+          line,
+          canvas.width / 2,
+          startY + (index * lineHeight)
+        );
       });
 
+      // Reset shadow
+      ctx.shadowColor = 'transparent';
+      ctx.shadowBlur = 0;
+
+      // Download the image
       const link = document.createElement("a");
       link.download = "inspire-me.png";
       link.href = canvas.toDataURL("image/png");
       link.click();
-      setDownloading(false);
-    };
-  };
-
-  const handleRandomBackground = async () => {
-    setRandomizing(true);
-    
-    try {
-      const availableBackgrounds = BACKGROUNDS.filter(bg => bg !== selectedBg);
-      const randomBg = availableBackgrounds[Math.floor(Math.random() * availableBackgrounds.length)];
-      
-      await new Promise((resolve, reject) => {
-        const img = new Image();
-        img.onload = resolve;
-        img.onerror = reject;
-        img.src = randomBg;
-        setTimeout(() => reject(new Error('Image loading timeout')), 10000);
-      });
-      
-      setSelectedBg(randomBg);
     } catch (error) {
-      console.error('Error loading random background:', error);
+      console.error('Error during wallpaper generation:', error);
     } finally {
-      setRandomizing(false);
+      setDownloading(false);
     }
   };
 
   const handleCustomBackground = (file: File) => {
     const url = URL.createObjectURL(file);
     setSelectedBg(url);
+    setBackgroundType('image');
   };
 
   const handlePresetChange = (presetId: string) => {
@@ -205,11 +281,13 @@ export default function Home() {
         </div>
 
         <div className="grid lg:grid-cols-[1.5fr,1fr] gap-8 items-start">
-          <div className="order-2 lg:order-1">
+          <div className="order-2 lg:order-1 lg:sticky lg:top-24">
             <div className="relative group">
               <div className="absolute -inset-1 bg-gradient-to-r from-primary/10 to-primary/20 rounded-xl blur-lg group-hover:blur-xl transition-all duration-300" />
               <WallpaperPreview
                 backgroundUrl={selectedBg}
+                backgroundType={backgroundType}
+                bgGradientSettings={bgGradientSettings}
                 text={text}
                 fontSize={fontSize}
                 selectedFont={selectedFont}
@@ -223,7 +301,6 @@ export default function Home() {
               {downloading && <LoadingOverlay message="Generating wallpaper..." />}
             </div>
           </div>
-          
           <div className="order-1 lg:order-2 lg:sticky lg:top-4">
             <WallpaperControls
               text={text}
@@ -248,6 +325,10 @@ export default function Home() {
               onCustomSizeChange={handleCustomSizeChange}
               selectedBg={selectedBg}
               onBackgroundChange={setSelectedBg}
+              backgroundType={backgroundType}
+              onBackgroundTypeChange={setBackgroundType}
+              bgGradientSettings={bgGradientSettings}
+              onBgGradientChange={setBgGradientSettings}
             />
           </div>
         </div>
