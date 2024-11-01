@@ -1,7 +1,7 @@
 "use client";
 
 import { ChangeEvent, useRef } from "react";
-import { Download, RefreshCcw, Upload, Type, Image as ImageIcon, Sparkles, Monitor, Smartphone } from "lucide-react";
+import { Download, RefreshCcw, Type, Image as ImageIcon, Sparkles, Monitor, Smartphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
@@ -19,7 +19,7 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/h
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import BackgroundSelector from "./background-selector";
 import { GradientSettings } from "@/lib/interface";
-import { GRADIENT_PRESETS } from "@/lib/constants";
+import { GradientControl } from "./gradient-control";
 
 interface WallpaperControlsProps {
   text: string;
@@ -44,6 +44,10 @@ interface WallpaperControlsProps {
   onCustomSizeChange: (dimension: "width" | "height", value: number) => void;
   selectedBg: string;
   onBackgroundChange: (bg: string) => void;
+  backgroundType: 'image' | 'color' | 'gradient';
+  onBackgroundTypeChange: (type: 'image' | 'color' | 'gradient') => void;
+  bgGradientSettings: GradientSettings;
+  onBgGradientChange: (settings: GradientSettings) => void;
 }
 
 export function WallpaperControls({
@@ -69,6 +73,10 @@ export function WallpaperControls({
   onCustomSizeChange,
   selectedBg,
   onBackgroundChange,
+  backgroundType,
+  onBackgroundTypeChange,
+  bgGradientSettings,
+  onBgGradientChange,
 }: WallpaperControlsProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   
@@ -158,7 +166,7 @@ export function WallpaperControls({
               />
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-4 gap-4">
               <div>
                 <label className="text-sm text-muted-foreground block mb-2">Font Family</label>
                 <Select value={selectedFont} onValueChange={onFontChange}>
@@ -191,25 +199,8 @@ export function WallpaperControls({
                 </Select>
               </div>
 
-              {gradientSettings.type === 'solid' && (
-                <div>
-                  <label className="text-sm text-muted-foreground block mb-2">Font Color</label>
-                  <div className="bg-background/50 rounded-md">
-                    <Input
-                      type="color"
-                      value={fontColor}
-                      onChange={(e) => onFontColorChange(e.target.value)}
-                      className="w-full cursor-pointer"
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Gradient Settings */}
-            <div className="space-y-4 pt-2">
               <div>
-                <label className="text-sm text-muted-foreground block mb-2">Text Style</label>
+                <label className="text-sm text-muted-foreground block mb-2">Color Style</label>
                 <Select
                   value={gradientSettings.type}
                   onValueChange={(type) => onGradientChange({ 
@@ -221,124 +212,36 @@ export function WallpaperControls({
                     ] : gradientSettings.stops
                   })}
                 >
-                  <SelectTrigger className="bg-background/50">
+                  <SelectTrigger className={`bg-background/50 ${gradientSettings.type !== 'solid' ? 'w-36' : ''}`}>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="solid">Solid Color</SelectItem>
+                    <SelectItem value="solid">Solid</SelectItem>
                     <SelectItem value="linear">Linear Gradient</SelectItem>
                     <SelectItem value="radial">Radial Gradient</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
-              {gradientSettings.type !== 'solid' && (
-                <>
-                  {gradientSettings.type === 'linear' && (
-                    <div>
-                      <label className="text-sm text-muted-foreground block mb-2">Gradient Angle</label>
-                      <div className="flex items-center gap-4">
-                        <Slider
-                          value={[gradientSettings.angle || 0]}
-                          onValueChange={(values) => onGradientChange({ 
-                            ...gradientSettings, 
-                            angle: values[0] 
-                          })}
-                          min={0}
-                          max={360}
-                          step={1}
-                          className="flex-1"
-                        />
-                        <span className="text-sm text-muted-foreground w-12">
-                          {gradientSettings.angle}°
-                        </span>
-                      </div>
-                    </div>
-                  )}
-
-                  <div>
-                    <label className="text-sm text-muted-foreground block mb-2">Color Stops</label>
-                    {gradientSettings.stops.map((stop, index) => (
-                      <div key={index} className="flex gap-2 mb-2 items-center">
-                        <Input
-                          type="color"
-                          value={stop.color}
-                          onChange={(e) => {
-                            const newStops = [...gradientSettings.stops];
-                            newStops[index] = { ...stop, color: e.target.value };
-                            onGradientChange({ ...gradientSettings, stops: newStops });
-                          }}
-                          className="w-16 p-1 h-8"
-                        />
-                        <Slider
-                          value={[stop.position]}
-                          onValueChange={(values) => {
-                            const newStops = [...gradientSettings.stops];
-                            newStops[index] = { ...stop, position: values[0] };
-                            onGradientChange({ ...gradientSettings, stops: newStops });
-                          }}
-                          min={0}
-                          max={100}
-                          step={1}
-                          className="flex-1"
-                        />
-                        <span className="text-sm text-muted-foreground w-12">
-                          {stop.position}%
-                        </span>
-                      </div>
-                    ))}
-                    <div className="flex gap-2 mt-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => onGradientChange({
-                          ...gradientSettings,
-                          stops: [...gradientSettings.stops, { color: "#ffffff", position: 100 }]
-                        })}
-                        disabled={gradientSettings.stops.length >= 5}
-                      >
-                        Add Stop
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => onGradientChange({
-                          ...gradientSettings,
-                          stops: gradientSettings.stops.slice(0, -1)
-                        })}
-                        disabled={gradientSettings.stops.length <= 2}
-                      >
-                        Remove Stop
-                      </Button>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="text-sm text-muted-foreground block mb-2">Gradient Presets</label>
-                    <div className="grid grid-cols-2 gap-2">
-                      {GRADIENT_PRESETS.map((preset, index) => (
-                        <Button
-                          key={index}
-                          variant="outline"
-                          className="w-full h-12"
-                          onClick={() => onGradientChange(preset.value)}
-                        >
-                          <div
-                            className="w-4 h-4 rounded-full mr-2"
-                            style={{
-                              background: `linear-gradient(${preset.value.angle}deg, ${preset.value.stops.map(
-                                stop => `${stop.color} ${stop.position}%`
-                              ).join(', ')})`
-                            }}
-                          />
-                          {preset.label}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-                </>
+              {gradientSettings.type === 'solid' && (
+                <div>
+                  <label className="text-sm text-muted-foreground block mb-2">Text Color</label>
+                  <Input
+                    type="color"
+                    value={fontColor}
+                    onChange={(e) => onFontColorChange(e.target.value)}
+                    className="w-full h-10 cursor-pointer"
+                  />
+                </div>
               )}
             </div>
+
+            {gradientSettings.type !== 'solid' && (
+              <GradientControl
+                value={gradientSettings}
+                onChange={onGradientChange}
+              />
+             )}
           </div>
         </div>
 
@@ -354,33 +257,20 @@ export function WallpaperControls({
             backgrounds={BACKGROUNDS}
             selectedBg={selectedBg}
             onSelect={onBackgroundChange}
+            onSelectGradient={onBgGradientChange}
+            selectedType={backgroundType}
+            onTypeChange={onBackgroundTypeChange}
+            onRandomize={onRandomBackground}
+            bgGradientSettings={bgGradientSettings}
           />
 
-          <div className="grid grid-cols-2 gap-3">
-            <Button
-              onClick={onRandomBackground}
-              variant="outline"
-              className="w-full bg-background/50 hover:bg-background/80"
-            >
-              <RefreshCcw className="w-4 h-4 mr-2" />
-              Random
-            </Button>
-            <Button
-              onClick={() => fileInputRef.current?.click()}
-              variant="outline"
-              className="w-full bg-background/50 hover:bg-background/80"
-            >
-              <Upload className="w-4 h-4 mr-2" />
-              Upload
-            </Button>
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFileChange}
-              accept="image/*"
-              className="hidden"
-            />
-          </div>
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            accept="image/*"
+            className="hidden"
+          />
         </div>
 
         {/* Size Settings Section */}

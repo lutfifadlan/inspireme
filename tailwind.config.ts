@@ -9,6 +9,18 @@ const config: Config = {
   ],
   theme: {
   	extend: {
+			fontFamily: {
+        inter: ['var(--font-inter)'],
+        playfair: ['var(--font-playfair)'],
+        montserrat: ['var(--font-montserrat)'],
+        roboto: ['var(--font-roboto)'],
+        lora: ['var(--font-lora)'],
+        oswald: ['var(--font-oswald)'],
+        raleway: ['var(--font-raleway)'],
+        poppins: ['var(--font-poppins)'],
+        'fira-code': ['var(--font-fira-code)'],
+        merriweather: ['var(--font-merriweather)'],
+      },
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',

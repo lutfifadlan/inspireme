@@ -2,13 +2,6 @@ import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { GradientSettings } from '@/lib/interface';
 import { GRADIENT_PRESETS } from '@/lib/constants';
 interface GradientControlProps {
@@ -19,30 +12,6 @@ interface GradientControlProps {
 export function GradientControl({ value, onChange }: GradientControlProps) {
   return (
     <div className="space-y-4">
-      <div>
-        <label className="text-sm text-muted-foreground block mb-2">Text Style</label>
-        <Select
-          value={value.type}
-          onValueChange={(type) => onChange({ 
-            ...value, 
-            type: type as 'solid' | 'linear' | 'radial',
-            stops: value.stops.length === 0 ? [
-              { color: "#ffffff", position: 0 },
-              { color: "#ffffff", position: 100 }
-            ] : value.stops
-          })}
-        >
-          <SelectTrigger className="bg-background/50">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="solid">Solid Color</SelectItem>
-            <SelectItem value="linear">Linear Gradient</SelectItem>
-            <SelectItem value="radial">Radial Gradient</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
       {value.type !== 'solid' && (
         <>
           {value.type === 'linear' && (
@@ -118,23 +87,22 @@ export function GradientControl({ value, onChange }: GradientControlProps) {
 
           <div>
             <label className="text-sm text-muted-foreground block mb-2">Gradient Presets</label>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-6 gap-2">
               {GRADIENT_PRESETS.map((preset, index) => (
                 <Button
                   key={index}
-                  variant="outline"
-                  className="w-full h-12"
+                  variant="outline" 
+                  className="w-12 h-12 p-0"
                   onClick={() => onChange(preset.value)}
                 >
                   <div
-                    className="w-4 h-4 rounded-full mr-2"
+                    className="w-full h-full rounded-sm"
                     style={{
                       background: `linear-gradient(${preset.value.angle}deg, ${preset.value.stops.map(
                         stop => `${stop.color} ${stop.position}%`
                       ).join(', ')})`
                     }}
                   />
-                  {preset.label}
                 </Button>
               ))}
             </div>

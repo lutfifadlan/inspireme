@@ -150,7 +150,7 @@ export const GRADIENT_PRESETS: { label: string; value: GradientSettings }[] = [
   {
     label: "Sunset",
     value: {
-      type: "linear",
+      type: "linear", 
       angle: 45,
       stops: [
         { color: "#FF512F", position: 0 },
@@ -170,7 +170,7 @@ export const GRADIENT_PRESETS: { label: string; value: GradientSettings }[] = [
     }
   },
   {
-    label: "Purple Rain",
+    label: "Purple Rain", 
     value: {
       type: "linear",
       angle: 45,
@@ -190,5 +190,234 @@ export const GRADIENT_PRESETS: { label: string; value: GradientSettings }[] = [
         { color: "#71B280", position: 100 }
       ]
     }
-  }
+  },
+  {
+    label: "Northern Lights",
+    value: {
+      type: "linear",
+      angle: 60,
+      stops: [
+        { color: "#4CAF50", position: 0 },
+        { color: "#2196F3", position: 50 },
+        { color: "#9C27B0", position: 100 }
+      ]
+    }
+  },
+  {
+    label: "Cotton Candy",
+    value: {
+      type: "linear",
+      angle: 135,
+      stops: [
+        { color: "#FFB6C1", position: 0 },
+        { color: "#87CEEB", position: 100 }
+      ]
+    }
+  },
+  {
+    label: "Golden Hour",
+    value: {
+      type: "linear",
+      angle: 30,
+      stops: [
+        { color: "#FFD700", position: 0 },
+        { color: "#FFA500", position: 50 },
+        { color: "#FF4500", position: 100 }
+      ]
+    }
+  },
+  {
+    label: "Midnight",
+    value: {
+      type: "linear",
+      angle: 45,
+      stops: [
+        { color: "#191970", position: 0 },
+        { color: "#000080", position: 50 },
+        { color: "#483D8B", position: 100 }
+      ]
+    }
+  },
+  {
+    label: "Spring Bloom",
+    value: {
+      type: "linear",
+      angle: 70,
+      stops: [
+        { color: "#98FB98", position: 0 },
+        { color: "#DDA0DD", position: 100 }
+      ]
+    }
+  },
+  {
+    label: "Desert Sand",
+    value: {
+      type: "linear",
+      angle: 20,
+      stops: [
+        { color: "#F4A460", position: 0 },
+        { color: "#DEB887", position: 100 }
+      ]
+    }
+  },
+  {
+    label: "Deep Space",
+    value: {
+      type: "radial",
+      angle: 0,
+      stops: [
+        { color: "#000033", position: 0 },
+        { color: "#191970", position: 50 },
+        { color: "#301934", position: 100 }
+      ]
+    }
+  },
+  {
+    label: "Tropical Paradise",
+    value: {
+      type: "linear",
+      angle: 160,
+      stops: [
+        { color: "#00FA9A", position: 0 },
+        { color: "#40E0D0", position: 50 },
+        { color: "#1E90FF", position: 100 }
+      ]
+    }
+  },
+  {
+    label: "Peachy Sunset",
+    value: {
+      type: "linear",
+      angle: 45,
+      stops: [
+        { color: "#FF7E5F", position: 0 },
+        { color: "#FEB47B", position: 100 }
+      ]
+    }
+  },
+  {
+    label: "Blueberry",
+    value: {
+      type: "linear",
+      angle: 45,
+      stops: [
+        { color: "#4A00E0", position: 0 },
+        { color: "#8E2DE2", position: 100 }
+      ]
+    }
+  },
+  {
+    label: "Sunrise",
+    value: {
+      type: "linear",
+      angle: 90,
+      stops: [
+        { color: "#FF5F6D", position: 0 },
+        { color: "#FFC371", position: 100 }
+      ]
+    }
+  },
+  {
+    label: "Minty Fresh",
+    value: {
+      type: "linear",
+      angle: 135,
+      stops: [
+        { color: "#00B09B", position: 0 },
+        { color: "#96C93D", position: 100 }
+      ]
+    }
+  },
+  {
+    label: "Frosted Ocean",
+    value: {
+      type: "linear",
+      angle: 180,
+      stops: [
+        { color: "#00C6FF", position: 0 },
+        { color: "#0072FF", position: 100 }
+      ]
+    }
+  },
+  {
+    label: "Coral Reef",
+    value: {
+      type: "linear",
+      angle: 45,
+      stops: [
+        { color: "#FF6A88", position: 0 },
+        { color: "#FFB199", position: 100 }
+      ]
+    }
+  },
+  {
+    label: "Purple Haze",
+    value: {
+      type: "linear",
+      angle: 270,
+      stops: [
+        { color: "#DA22FF", position: 0 },
+        { color: "#9733EE", position: 100 }
+      ]
+    }
+  },
+  {
+    label: "Golden Sunset",
+    value: {
+      type: "linear",
+      angle: 45,
+      stops: [
+        { color: "#F9D423", position: 0 },
+        { color: "#FF4E50", position: 100 }
+      ]
+    }
+  },
+  {
+    label: "Twilight",
+    value: {
+      type: "linear",
+      angle: 90,
+      stops: [
+        { color: "#4A00E0", position: 0 },
+        { color: "#8E2DE2", position: 100 }
+      ]
+    }
+  },
+  {
+    label: "Ocean Breeze",
+    value: {
+      type: "linear",
+      angle: 180,
+      stops: [
+        { color: "#00C6FF", position: 0 },
+        { color: "#0072FF", position: 100 }
+      ]
+    }
+  },
+  {
+    label: "Fire and Ice",
+    value: {
+      type: "linear",
+      angle: 45,
+      stops: [
+        { color: "#FF5F6D", position: 0 },
+        { color: "#00C6FF", position: 100 }
+      ]
+    }
+  },
+  {
+    label: "Rainbow",
+    value: {
+      type: "linear",
+      angle: 90,
+      stops: [
+        { color: "#FF0000", position: 0 },
+        { color: "#FF7F00", position: 20 },
+        { color: "#FFFF00", position: 40 },
+        { color: "#00FF00", position: 60 },
+        { color: "#0000FF", position: 80 },
+        { color: "#4B0082", position: 100 }
+      ]
+    }
+  },
 ];
