@@ -4,7 +4,11 @@ export interface GradientStop {
 }
 
 export interface GradientSettings {
-  type: 'solid' | 'linear' | 'radial';
-  stops: GradientStop[];
+  type: 'linear' | 'radial' | 'solid';
   angle?: number;
+  position?: {
+    x: number;
+    y: number;
+  };
+  stops: GradientStop[];
 }

@@ -33,26 +33,23 @@ export function WallpaperPreview({
   const getBackgroundStyle = () => {
     if (backgroundType === 'image') {
       return {
-        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${backgroundUrl})`,
+        backgroundImage: `url(${backgroundUrl})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       };
     } else if (backgroundType === 'color') {
       return { backgroundColor: backgroundUrl };
-    } else {
-      const { type, angle, stops } = bgGradientSettings;
+    } else if (backgroundType === 'gradient') {
+      const { type, stops, angle, position } = bgGradientSettings;
+      const stopsString = stops.map(stop => `${stop.color} ${stop.position}%`).join(', ');
+      
       if (type === 'linear') {
-        const gradient = `linear-gradient(${angle}deg, ${stops.map(stop => 
-          `${stop.color} ${stop.position}%`
-        ).join(', ')})`;
-        return { backgroundImage: gradient };
-      } else {
-        const gradient = `radial-gradient(circle, ${stops.map(stop => 
-          `${stop.color} ${stop.position}%`
-        ).join(', ')})`;
-        return { backgroundImage: gradient };
+        return { background: `linear-gradient(${angle}deg, ${stopsString})` };
+      } else if (type === 'radial') {
+        return { background: `radial-gradient(circle at ${position?.x ?? 50}% ${position?.y ?? 50}%, ${stopsString})` };
       }
     }
+    return {};
   };
 
   // Create text style with proper gradient handling
