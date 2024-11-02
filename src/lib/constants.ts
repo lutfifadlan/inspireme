@@ -420,4 +420,26 @@ export const GRADIENT_PRESETS: { label: string; value: GradientSettings }[] = [
       ]
     }
   },
+  {
+    label: 'Radial Blue',
+    value: {
+      type: 'radial',
+      position: { x: 50, y: 50 },
+      stops: [
+        { color: '#00134c', position: 0 },
+        { color: '#0066ff', position: 100 }
+      ]
+    }
+  },
+  {
+    label: 'Radial Sunset',
+    value: {
+      type: 'radial',
+      position: { x: 50, y: 100 },
+      stops: [
+        { color: '#ff8a00', position: 0 },
+        { color: '#e52e71', position: 100 }
+      ]
+    }
+  },
 ];

@@ -23,79 +23,10 @@ interface BackgroundSelectorProps {
 // Predefined solid colors
 const SOLID_COLORS = [
   '#1a1a1a', '#2c3e50', '#34495e', '#16a085', '#27ae60',
-  '#2980b9', '#8e44ad', '#2c3e50', '#f1c40f', '#e67e22',
-  '#e74c3c', '#ecf0f1', '#95a5a6', '#f39c12', '#d35400'
-];
-
-// Predefined gradients
-const GRADIENT_PRESETS = [
-  {
-    label: 'Sunset',
-    value: {
-      type: 'linear' as const,
-      angle: 45,
-      stops: [
-        { color: '#FF512F', position: 0 },
-        { color: '#DD2476', position: 100 }
-      ]
-    }
-  },
-  {
-    label: 'Ocean',
-    value: {
-      type: 'linear' as const,
-      angle: 45,
-      stops: [
-        { color: '#2193b0', position: 0 },
-        { color: '#6dd5ed', position: 100 }
-      ]
-    }
-  },
-  {
-    label: 'Forest',
-    value: {
-      type: 'linear' as const,
-      angle: 45,
-      stops: [
-        { color: '#134E5E', position: 0 },
-        { color: '#71B280', position: 100 }
-      ]
-    }
-  },
-  {
-    label: 'Purple Haze',
-    value: {
-      type: 'linear' as const,
-      angle: 45,
-      stops: [
-        { color: '#7303c0', position: 0 },
-        { color: '#ec38bc', position: 50 },
-        { color: '#fdeff9', position: 100 }
-      ]
-    }
-  },
-  {
-    label: 'Deep Ocean',
-    value: {
-      type: 'linear' as const,
-      angle: 45,
-      stops: [
-        { color: '#1CB5E0', position: 0 },
-        { color: '#000851', position: 100 }
-      ]
-    }
-  },
-  {
-    label: 'Cosmic',
-    value: {
-      type: 'radial' as const,
-      stops: [
-        { color: '#1f2937', position: 0 },
-        { color: '#111827', position: 50 },
-        { color: '#030712', position: 100 }
-      ]
-    }
-  }
+  '#2980b9', '#8e44ad', '#f1c40f', '#e67e22', '#e74c3c',
+  '#ecf0f1', '#95a5a6', '#f39c12', '#d35400', '#ff5733',
+  '#33ff57', '#3357ff', '#f1c40f', '#8e44ad', '#2ecc71',
+  '#ffcc00', '#ff6699', '#66ccff', '#ccff66'
 ];
 
 export default function BackgroundSelector({
@@ -165,7 +96,7 @@ export default function BackgroundSelector({
 
         <TabsContent value="color">
           <ScrollArea className="h-[200px] rounded-md border bg-background/50">
-            <div className="grid grid-cols-5 gap-2 p-2">
+            <div className="grid grid-cols-6 gap-2 p-2">
               {SOLID_COLORS.map((color, index) => (
                 <button
                   key={index}
@@ -197,25 +128,7 @@ export default function BackgroundSelector({
         </TabsContent>
 
         <TabsContent value="gradient" className="space-y-4">
-          <div className="grid grid-cols-2 gap-2">
-            {GRADIENT_PRESETS.map((preset, index) => (
-              <button
-                key={index}
-                onClick={() => onSelectGradient(preset.value)}
-                className="w-full h-12 rounded-lg overflow-hidden ring-1 ring-border/20 transition-all hover:ring-2 hover:ring-primary"
-                style={{
-                  background: `linear-gradient(${preset.value.angle}deg, ${preset.value.stops.map(
-                    stop => `${stop.color} ${stop.position}%`
-                  ).join(', ')})`
-                }}
-              >
-                <span className="sr-only">{preset.label}</span>
-              </button>
-            ))}
-          </div>
-          
           <div className="space-y-4">
-            <label className="text-sm text-muted-foreground block">Custom Gradient</label>
             <GradientControl
               value={bgGradientSettings}
               onChange={onSelectGradient}
