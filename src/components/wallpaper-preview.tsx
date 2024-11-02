@@ -26,6 +26,8 @@ export function WallpaperPreview({
   fontWeight,
   fontColor,
   gradientSettings,
+  selectedPreset,
+  customSize,
 }: WallpaperPreviewProps) {
   // Create background style
   const getBackgroundStyle = () => {
@@ -53,7 +55,7 @@ export function WallpaperPreview({
     }
   };
 
-  // Create text style
+  // Create text style with proper gradient handling
   const getTextStyle = () => {
     const baseStyle = {
       fontSize: `${fontSize}px`,
@@ -81,16 +83,29 @@ export function WallpaperPreview({
 
       return {
         ...baseStyle,
-        background: gradient,
+        backgroundImage: gradient,
         WebkitBackgroundClip: 'text',
         WebkitTextFillColor: 'transparent',
         backgroundClip: 'text',
+        color: fontColor, // Fallback color
       };
     }
   };
 
+  // Calculate aspect ratio based on selected preset or custom size
+  const getAspectRatio = () => {
+    if (!selectedPreset) return '16 / 9'; // Default fallback
+    const size = selectedPreset.id === "custom" && customSize 
+      ? customSize 
+      : selectedPreset;
+    return `${size.width} / ${size.height}`;
+  };
+
   return (
-    <div className="relative aspect-video rounded-xl overflow-hidden shadow-2xl ring-1 ring-border/20">
+    <div 
+      className="relative rounded-xl overflow-hidden shadow-2xl ring-1 ring-border/20"
+      style={{ aspectRatio: getAspectRatio() }}
+    >
       <div
         className="absolute inset-0 w-full h-full"
         style={getBackgroundStyle()}

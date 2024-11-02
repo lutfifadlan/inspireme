@@ -19,18 +19,45 @@ const LoadingOverlay = ({ message = "Loading..." }) => {
 };
 
 // Helper function to get font weight value
-const getFontWeight = (fontWeight: string) => {
-  const weightMap: { [key: string]: string } = {
-    'font-thin': '100',
-    'font-light': '300',
-    'font-normal': '400',
-    'font-medium': '500',
-    'font-semibold': '600',
-    'font-bold': '700',
-    'font-extrabold': '800',
-    'font-black': '900'
+const getFontWeight = (fontWeight: string): string => {
+  // First remove the 'font-' prefix if it exists
+  const weight = fontWeight.replace('font-', '');
+  
+  // Map text weights to numeric values
+  const weightMap: Record<string, string> = {
+    'thin': '100',
+    'extralight': '200',
+    'light': '300',
+    'normal': '400',
+    'regular': '400',
+    'medium': '500',
+    'semibold': '600',
+    'bold': '700',
+    'extrabold': '800',
+    'black': '900'
   };
-  return weightMap[fontWeight] || '400';
+
+  return weightMap[weight] || '400';
+};
+
+// Update the loadFontWithWeight function
+const loadFontWithWeight = async (fontName: string, weight: string, fontSize: number): Promise<void> => {
+  try {
+    // Create a test string with the desired font
+    const testString = `${weight} ${fontSize}px "${fontName}"`;
+    
+    // Wait for the font to load using CSS Font Loading API
+    await document.fonts.load(testString);
+    
+    // Additional check to ensure the font is loaded
+    if (!document.fonts.check(testString)) {
+      console.warn('Font not available:', testString);
+      // Try loading with system font as fallback
+      await document.fonts.load(`${weight} ${fontSize}px -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`);
+    }
+  } catch (e) {
+    console.warn('Failed to load font:', e);
+  }
 };
 
 export default function Home() {
@@ -124,9 +151,11 @@ export default function Home() {
           img.onerror = reject;
           setTimeout(() => reject(new Error('Image loading timeout')), 10000);
         });
+        
+        // Draw image
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         
-        // Add overlay for image backgrounds
+        // Add overlay
         ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
       } else if (backgroundType === 'color') {
@@ -147,7 +176,7 @@ export default function Home() {
         } else {
           gradient = ctx.createRadialGradient(
             canvas.width / 2, canvas.height / 2, 0,
-            canvas.width / 2, canvas.height / 2, canvas.width / 2
+            canvas.width / 2, canvas.height / 2, Math.max(canvas.width, canvas.height) / 2
           );
         }
 
@@ -159,41 +188,24 @@ export default function Home() {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
       }
 
-      // Set up text rendering
+      // Set up text rendering with proper font loading
       const weight = getFontWeight(fontWeight);
       const fontName = CANVAS_FONT_MAPPING[selectedFont as keyof typeof CANVAS_FONT_MAPPING] || 'Arial';
-      ctx.font = `${weight} ${fontSize}px "${fontName}"`;
+      
+      // Load the font
+      await loadFontWithWeight(fontName, weight, fontSize);
+      
+      // Set the font with CSS-style weight
+      ctx.font = `${weight} ${fontSize}px "${fontName}", -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`;
+      
+      // Force font settings
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-
-      // Set up text gradient or color
-      if (gradientSettings.type === 'solid') {
-        ctx.fillStyle = fontColor;
-      } else {
-        const { type, angle, stops } = gradientSettings;
-        let gradient;
-        
-        if (type === 'linear') {
-          const angleRad = (angle || 0) * Math.PI / 180;
-          const x1 = canvas.width / 2 - Math.cos(angleRad) * canvas.width;
-          const y1 = canvas.height / 2 - Math.sin(angleRad) * canvas.height;
-          const x2 = canvas.width / 2 + Math.cos(angleRad) * canvas.width;
-          const y2 = canvas.height / 2 + Math.sin(angleRad) * canvas.height;
-          gradient = ctx.createLinearGradient(x1, y1, x2, y2);
-        } else {
-          gradient = ctx.createRadialGradient(
-            canvas.width / 2, canvas.height / 2, 0,
-            canvas.width / 2, canvas.height / 2, canvas.width / 2
-          );
-        }
-
-        stops.forEach(stop => {
-          gradient.addColorStop(stop.position / 100, stop.color);
-        });
-
-        ctx.fillStyle = gradient;
-      }
-
+      
+      // Ensure the font is applied
+      ctx.save();
+      ctx.font = ctx.font; // Re-apply font to force update
+      
       // Calculate text wrapping
       const maxWidth = canvas.width * 0.8;
       const words = text.split(' ');
@@ -212,24 +224,67 @@ export default function Home() {
       }
       lines.push(currentLine);
 
-      // Add text shadow
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
-      ctx.shadowBlur = fontSize / 8;
-      ctx.shadowOffsetX = 0;
-      ctx.shadowOffsetY = 0;
-
-      // Draw text
+      // Calculate line height and starting Y position outside the loops
       const lineHeight = fontSize * 1.4;
       const totalHeight = lines.length * lineHeight;
       const startY = (canvas.height - totalHeight) / 2 + (lineHeight / 2);
 
-      lines.forEach((line, index) => {
-        ctx.fillText(
-          line,
-          canvas.width / 2,
-          startY + (index * lineHeight)
-        );
-      });
+      if (gradientSettings.type === 'solid') {
+        ctx.fillStyle = fontColor;
+        
+        // Add text shadow
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+        ctx.shadowBlur = fontSize / 8;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = fontSize / 16;
+
+        // Draw each line
+        lines.forEach((line, index) => {
+          ctx.fillText(
+            line,
+            canvas.width / 2,
+            startY + (index * lineHeight)
+          );
+        });
+      } else {
+        // For gradient text
+        const { type, angle = 45, stops } = gradientSettings; // Provide default angle
+        
+        lines.forEach((line, index) => {
+          const lineY = startY + (index * lineHeight);
+          const textWidth = ctx.measureText(line).width;
+          let textGradient: CanvasGradient;
+          
+          if (type === 'linear') {
+            const angleRad = (angle * Math.PI) / 180;
+            textGradient = ctx.createLinearGradient(
+              canvas.width / 2 - Math.cos(angleRad) * (textWidth / 2),
+              lineY - Math.sin(angleRad) * (fontSize / 2),
+              canvas.width / 2 + Math.cos(angleRad) * (textWidth / 2),
+              lineY + Math.sin(angleRad) * (fontSize / 2)
+            );
+          } else {
+            textGradient = ctx.createRadialGradient(
+              canvas.width / 2, lineY, 0,
+              canvas.width / 2, lineY, textWidth / 2
+            );
+          }
+
+          stops.forEach(stop => {
+            textGradient.addColorStop(stop.position / 100, stop.color);
+          });
+
+          // Add text shadow
+          ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+          ctx.shadowBlur = fontSize / 8;
+          ctx.shadowOffsetX = 0;
+          ctx.shadowOffsetY = fontSize / 16;
+
+          // Draw text with gradient
+          ctx.fillStyle = textGradient;
+          ctx.fillText(line, canvas.width / 2, lineY);
+        });
+      }
 
       // Reset shadow
       ctx.shadowColor = 'transparent';
