@@ -37,7 +37,8 @@ const getFontWeight = (fontWeight: string): string => {
     'black': '900'
   };
 
-  return weightMap[weight] || '400';
+  // Return the numeric weight or default to '400'
+  return weightMap[weight.toLowerCase()] || '400';
 };
 
 // Update the loadFontWithWeight function
@@ -46,14 +47,16 @@ const loadFontWithWeight = async (fontName: string, weight: string, fontSize: nu
     // Create a test string with the desired font
     const testString = `${weight} ${fontSize}px "${fontName}"`;
     
-    // Wait for the font to load using CSS Font Loading API
+    // Try to load the exact weight
     await document.fonts.load(testString);
     
-    // Additional check to ensure the font is loaded
+    // If the exact weight fails, try loading available weights
     if (!document.fonts.check(testString)) {
-      console.warn('Font not available:', testString);
+      console.warn('Exact font weight not available:', testString);
+      
       // Try loading with system font as fallback
-      await document.fonts.load(`${weight} ${fontSize}px -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`);
+      const fallbackString = `${weight} ${fontSize}px -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`;
+      await document.fonts.load(fallbackString);
     }
   } catch (e) {
     console.warn('Failed to load font:', e);

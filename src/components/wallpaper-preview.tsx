@@ -57,9 +57,26 @@ export function WallpaperPreview({
 
   // Create text style with proper gradient handling
   const getTextStyle = () => {
+    const getFontWeight = (weight: string) => {
+      const numericWeight = weight.replace('font-', '');
+      const weightMap: Record<string, string> = {
+        'thin': '100',
+        'extralight': '200',
+        'light': '300',
+        'normal': '400',
+        'regular': '400',
+        'medium': '500',
+        'semibold': '600',
+        'bold': '700',
+        'extrabold': '800',
+        'black': '900'
+      };
+      return weightMap[numericWeight.toLowerCase()] || '400';
+    };
+
     const baseStyle = {
       fontSize: `${fontSize}px`,
-      fontWeight: fontWeight.replace('font-', ''),
+      fontWeight: getFontWeight(fontWeight),
       maxWidth: '80%',
       textAlign: 'center' as const,
       wordBreak: 'break-word' as const,
