@@ -53,19 +53,23 @@ export function GradientControl({ value, onChange }: GradientControlProps) {
           </div>
 
           <div className="grid grid-cols-6 gap-2 p-2 bg-muted/50 rounded-lg">
-            {GRADIENT_PRESETS.filter(preset => preset.value.type === value.type).map((preset, index) => (
+            {GRADIENT_PRESETS.map((preset, index) => (
               <button
                 key={index}
-                onClick={() => onChange(preset.value)}
+                onClick={() => onChange({
+                  ...preset.value,
+                  type: value.type,
+                  ...(value.type === 'linear' ? { angle: preset.value.angle } : { position: preset.value.position })
+                })}
                 className={cn(
                   "w-full aspect-square rounded-lg transition-all hover:ring-2 hover:ring-primary relative overflow-hidden",
-                  JSON.stringify(value) === JSON.stringify(preset.value) && "ring-2 ring-primary"
+                  JSON.stringify(value.stops) === JSON.stringify(preset.value.stops) && "ring-2 ring-primary"
                 )}
               >
                 <div
                   className="absolute inset-0"
                   style={{
-                    background: preset.value.type === 'linear' 
+                    background: value.type === 'linear' 
                       ? `linear-gradient(${preset.value.angle}deg, ${preset.value.stops.map(
                           stop => `${stop.color} ${stop.position}%`
                         ).join(', ')})`
@@ -74,7 +78,7 @@ export function GradientControl({ value, onChange }: GradientControlProps) {
                         ).join(', ')})`
                   }}
                 />
-                {JSON.stringify(value) === JSON.stringify(preset.value) && (
+                {JSON.stringify(value.stops) === JSON.stringify(preset.value.stops) && (
                   <div className="absolute inset-0 flex items-center justify-center bg-black/20">
                     <Check className="w-4 h-4 text-white drop-shadow-md" />
                   </div>
@@ -102,7 +106,7 @@ export function GradientControl({ value, onChange }: GradientControlProps) {
 
           {value.type === 'radial' && (
             <div className="space-y-4">
-              <div className="relative aspect-square rounded-lg border bg-muted/50 overflow-hidden">
+              <div className="relative w-32 mx-auto aspect-square rounded-lg border bg-muted/50 overflow-hidden">
                 <div
                   className="absolute inset-0"
                   style={{
@@ -112,10 +116,10 @@ export function GradientControl({ value, onChange }: GradientControlProps) {
                   }}
                 />
                 <div
-                  className="absolute w-4 h-4 rounded-full bg-primary border-2 border-white shadow-lg cursor-move"
+                  className="absolute w-3 h-3 rounded-full bg-primary border-2 border-white shadow-lg cursor-move"
                   style={{
-                    left: `calc(${value.position?.x ?? 50}% - 8px)`,
-                    top: `calc(${value.position?.y ?? 50}% - 8px)`,
+                    left: `calc(${value.position?.x ?? 50}% - 6px)`,
+                    top: `calc(${value.position?.y ?? 50}% - 6px)`,
                   }}
                   onMouseDown={(e) => {
                     const rect = e.currentTarget.parentElement?.getBoundingClientRect();
