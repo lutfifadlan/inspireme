@@ -17,7 +17,7 @@ export function GradientControl({ value, onChange }: GradientControlProps) {
     <div className="space-y-4">
       {value.type !== 'solid' && (
         <>
-          <div className="flex gap-2">
+          <div className="flex gap-2 p-1">
             <Button
               variant={value.type === 'linear' ? 'default' : 'outline'}
               className={cn(
