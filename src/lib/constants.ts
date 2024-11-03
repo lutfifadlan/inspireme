@@ -148,115 +148,85 @@ export const MIN_FONT_SIZE = 1;
 
 export const GRADIENT_PRESETS: { label: string; value: GradientSettings }[] = [
   {
-    label: "Sunset",
-    value: {
-      type: "linear", 
-      angle: 45,
-      stops: [
-        { color: "#FF512F", position: 0 },
-        { color: "#F09819", position: 100 }
-      ]
-    }
-  },
-  {
-    label: "Ocean",
-    value: {
-      type: "linear",
-      angle: 45,
-      stops: [
-        { color: "#2193b0", position: 0 },
-        { color: "#6dd5ed", position: 100 }
-      ]
-    }
-  },
-  {
-    label: "Purple Rain", 
-    value: {
-      type: "linear",
-      angle: 45,
-      stops: [
-        { color: "#8E2DE2", position: 0 },
-        { color: "#4A00E0", position: 100 }
-      ]
-    }
-  },
-  {
-    label: "Forest",
-    value: {
-      type: "linear",
-      angle: 45,
-      stops: [
-        { color: "#134E5E", position: 0 },
-        { color: "#71B280", position: 100 }
-      ]
-    }
-  },
-  {
-    label: "Northern Lights",
-    value: {
-      type: "linear",
-      angle: 60,
-      stops: [
-        { color: "#4CAF50", position: 0 },
-        { color: "#2196F3", position: 50 },
-        { color: "#9C27B0", position: 100 }
-      ]
-    }
-  },
-  {
-    label: "Cotton Candy",
+    label: "Abyss",
     value: {
       type: "linear",
       angle: 135,
       stops: [
-        { color: "#FFB6C1", position: 0 },
-        { color: "#87CEEB", position: 100 }
+        { color: "#000000", position: 0 },
+        { color: "#0a0a0a", position: 50 },
+        { color: "#1a1a1a", position: 100 }
       ]
     }
   },
   {
-    label: "Golden Hour",
+    label: "Obsidian",
     value: {
       type: "linear",
-      angle: 30,
+      angle: 135,
       stops: [
-        { color: "#FFD700", position: 0 },
-        { color: "#FFA500", position: 50 },
-        { color: "#FF4500", position: 100 }
+        { color: "#000000", position: 0 },
+        { color: "#434343", position: 100 }
       ]
     }
   },
   {
-    label: "Midnight",
+    label: "Carbon",
+    value: {
+      type: "radial",
+      angle: 0,
+      stops: [
+        { color: "#111111", position: 0 },
+        { color: "#232323", position: 50 },
+        { color: "#1a1a1a", position: 100 }
+      ]
+    }
+  },
+  {
+    label: "Charcoal Mist",
+    value: {
+      type: "linear",
+      angle: 225,
+      stops: [
+        { color: "#1f2937", position: 0 },
+        { color: "#111827", position: 50 },
+        { color: "#030712", position: 100 }
+      ]
+    }
+  },
+  {
+    label: "Dark Matter",
     value: {
       type: "linear",
       angle: 45,
+      position: { x: 50, y: 50 },
       stops: [
-        { color: "#191970", position: 0 },
-        { color: "#000080", position: 50 },
-        { color: "#483D8B", position: 100 }
+        { color: "#300030", position: 0 },
+        { color: "#4B0082", position: 50 },
+        { color: "#000000", position: 100 }
       ]
     }
   },
   {
-    label: "Spring Bloom",
+    label: "Slate Night",
     value: {
       type: "linear",
-      angle: 70,
+      angle: 90,
       stops: [
-        { color: "#98FB98", position: 0 },
-        { color: "#DDA0DD", position: 100 }
+        { color: "#0f172a", position: 0 },
+        { color: "#1e293b", position: 100 }
       ]
     }
   },
   {
-    label: "Desert Sand",
+    label: "Graphite",
     value: {
       type: "linear",
-      angle: 20,
+      angle: 160,
       stops: [
-        { color: "#F4A460", position: 0 },
-        { color: "#DEB887", position: 100 }
+        { color: "#18181b", position: 0 },
+        { color: "#27272a", position: 50 },
+        { color: "#3f3f46", position: 100 }
       ]
     }
   },
@@ -273,6 +243,64 @@ export const GRADIENT_PRESETS: { label: string; value: GradientSettings }[] = [
     }
   },
   {
+    label: "Radial Blue",
+    value: {
+      type: "linear",
+      angle: 45,
+      position: { x: 50, y: 50 },
+      stops: [
+        { color: "#00134c", position: 0 },
+        { color: "#0066ff", position: 100 }
+      ]
+    }
+  },
+  {
+    label: "Northern Lights",
+    value: {
+      type: "linear",
+      angle: 60,
+      stops: [
+        { color: "#4CAF50", position: 0 },
+        { color: "#2196F3", position: 50 },
+        { color: "#9C27B0", position: 100 }
+      ]
+    }
+  },
+  {
+    label: "Emerald Dream",
+    value: {
+      type: "linear",
+      angle: 135,
+      stops: [
+        { color: "#004D40", position: 0 },
+        { color: "#00C853", position: 50 },
+        { color: "#64DD17", position: 100 }
+      ]
+    }
+  },
+  {
+    label: "Ocean",
+    value: {
+      type: "linear",
+      angle: 45,
+      stops: [
+        { color: "#2193b0", position: 0 },
+        { color: "#6dd5ed", position: 100 }
+      ]
+    }
+  },
+  {
+    label: "Forest",
+    value: {
+      type: "linear",
+      angle: 45,
+      stops: [
+        { color: "#134E5E", position: 0 },
+        { color: "#71B280", position: 100 }
+      ]
+    }
+  },
+  {
     label: "Tropical Paradise",
     value: {
       type: "linear",
@@ -285,17 +313,6 @@ export const GRADIENT_PRESETS: { label: string; value: GradientSettings }[] = [
     }
   },
   {
-    label: "Neon Dreams",
-    value: {
-      type: "linear",
-      angle: 45,
-      stops: [
-        { color: "#ff00ff", position: 0 },
-        { color: "#00ff00", position: 100 }
-      ]
-    }
-  },
-  {
     label: "Minty Fresh",
     value: {
       type: "linear",
@@ -303,28 +320,6 @@ export const GRADIENT_PRESETS: { label: string; value: GradientSettings }[] = [
       stops: [
         { color: "#00B09B", position: 0 },
         { color: "#96C93D", position: 100 }
-      ]
-    }
-  },
-  {
-    label: "Coral Reef",
-    value: {
-      type: "linear",
-      angle: 45,
-      stops: [
-        { color: "#FF6A88", position: 0 },
-        { color: "#FFB199", position: 100 }
-      ]
-    }
-  },
-  {
-    label: "Purple Haze",
-    value: {
-      type: "linear",
-      angle: 270,
-      stops: [
-        { color: "#DA22FF", position: 0 },
-        { color: "#9733EE", position: 100 }
       ]
     }
   },
@@ -355,72 +350,82 @@ export const GRADIENT_PRESETS: { label: string; value: GradientSettings }[] = [
     }
   },
   {
-    label: "Radial Blue",
-    value: {
-      type: "radial",
-      position: { x: 50, y: 50 },
-      stops: [
-        { color: "#00134c", position: 0 },
-        { color: "#0066ff", position: 100 }
-      ]
-    }
-  },
-  {
-    label: "Radial Sunset",
-    value: {
-      type: "radial",
-      position: { x: 50, y: 100 },
-      stops: [
-        { color: "#ff8a00", position: 0 },
-        { color: "#e52e71", position: 100 }
-      ]
-    }
-  },
-  {
-    label: "Cyberpunk",
+    label: "Spring Bloom",
     value: {
       type: "linear",
-      angle: 45,
+      angle: 70,
       stops: [
-        { color: "#FF00FF", position: 0 },
-        { color: "#00FFFF", position: 50 },
-        { color: "#FF00FF", position: 100 }
+        { color: "#98FB98", position: 0 },
+        { color: "#DDA0DD", position: 100 }
       ]
     }
   },
   {
-    label: "Dark Matter",
-    value: {
-      type: "radial",
-      position: { x: 50, y: 50 },
-      stops: [
-        { color: "#300030", position: 0 },
-        { color: "#4B0082", position: 50 },
-        { color: "#000000", position: 100 }
-      ]
-    }
-  },
-  {
-    label: "Emerald Dream",
+    label: "Cotton Candy",
     value: {
       type: "linear",
       angle: 135,
       stops: [
-        { color: "#004D40", position: 0 },
-        { color: "#00C853", position: 50 },
-        { color: "#64DD17", position: 100 }
+        { color: "#FFB6C1", position: 0 },
+        { color: "#87CEEB", position: 100 }
       ]
     }
   },
   {
-    label: "Cosmic Fusion",
+    label: "Coral Reef",
     value: {
-      type: "radial",
-      position: { x: 50, y: 50 },
+      type: "linear",
+      angle: 45,
       stops: [
-        { color: "#FF3CAC", position: 0 },
-        { color: "#784BA0", position: 50 },
-        { color: "#2B86C5", position: 100 }
+        { color: "#FF6A88", position: 0 },
+        { color: "#FFB199", position: 100 }
+      ]
+    }
+  },
+  {
+    label: "Desert Sand",
+    value: {
+      type: "linear",
+      angle: 20,
+      stops: [
+        { color: "#F4A460", position: 0 },
+        { color: "#DEB887", position: 100 }
+      ]
+    }
+  },
+  {
+    label: "Golden Hour",
+    value: {
+      type: "linear",
+      angle: 30,
+      stops: [
+        { color: "#FFD700", position: 0 },
+        { color: "#FFA500", position: 50 },
+        { color: "#FF4500", position: 100 }
+      ]
+    }
+  },
+  {
+    label: "Executive Gray",
+    value: {
+      type: "linear",
+      angle: 135,
+      stops: [
+        { color: "#2C3E50", position: 0 },
+        { color: "#3F5973", position: 50 },
+        { color: "#BDC3C7", position: 100 }
+      ]
+    }
+  },
+  {
+    label: "Mountain Sage",
+    value: {
+      type: "linear",
+      angle: 160,
+      stops: [
+        { color: "#2F4F4F", position: 0 },
+        { color: "#3C4F3C", position: 50 },
+        { color: "#4A5D4A", position: 100 }
       ]
     }
   }

@@ -22,11 +22,30 @@ interface BackgroundSelectorProps {
 
 // Predefined solid colors
 const SOLID_COLORS = [
-  '#1a1a1a', '#2c3e50', '#34495e', '#16a085', '#27ae60',
-  '#2980b9', '#8e44ad', '#f1c40f', '#e67e22', '#e74c3c',
-  '#ecf0f1', '#95a5a6', '#f39c12', '#d35400', '#ff5733',
-  '#33ff57', '#3357ff', '#f1c40f', '#8e44ad', '#2ecc71',
-  '#ffcc00', '#ff6699', '#66ccff', '#ccff66'
+  '#1a1a1a', // Dark black
+  '#2c3e50', // Midnight blue
+  '#34495e', // Wet asphalt
+  '#16a085', // Green sea
+  '#27ae60', // Nephritis green
+  '#2980b9', // Belize hole blue
+  '#8e44ad', // Wisteria purple
+  '#e74c3c', // Alizarin red
+  '#ecf0f1', // Clouds white
+  '#95a5a6', // Concrete gray
+  '#2ecc71', // Emerald green
+  '#3498db', // Peter river blue
+  '#9b59b6', // Amethyst purple
+  '#f1c40f', // Sunflower yellow
+  '#e67e22', // Carrot orange
+  '#1abc9c', // Turquoise
+  '#d35400', // Pumpkin orange
+  '#c0392b', // Pomegranate red
+  '#7f8c8d', // Asbestos gray
+  '#8B4513', // Saddle brown
+  '#4A90E2', // Dodger blue
+  '#FF6B6B', // Pastel red
+  '#48C9B0', // Medium turquoise
+  '#9575CD'  // Medium purple
 ];
 
 export default function BackgroundSelector({
@@ -40,7 +59,13 @@ export default function BackgroundSelector({
   bgGradientSettings
 }: BackgroundSelectorProps) {
   const handleRandomize = () => {
-    onRandomize();
+    if (selectedType === 'color') {
+      // Pick a random color from SOLID_COLORS
+      const randomColor = SOLID_COLORS[Math.floor(Math.random() * SOLID_COLORS.length)];
+      onSelect(randomColor);
+    } else {
+      onRandomize();
+    }
   };
 
   return (
@@ -62,7 +87,7 @@ export default function BackgroundSelector({
         </TabsList>
 
         <TabsContent value="image" className="space-y-4">
-          <ScrollArea className="h-[200px] rounded-md border bg-background/50">
+          <ScrollArea className="h-[300px] rounded-md border bg-background/50">
             <div className="grid grid-cols-2 gap-2 p-2">
               {backgrounds.map((bg, index) => (
                 <button
@@ -95,7 +120,6 @@ export default function BackgroundSelector({
         </TabsContent>
 
         <TabsContent value="color">
-          <ScrollArea className="h-[200px] rounded-md border bg-background/50">
             <div className="grid grid-cols-6 gap-2 p-2">
               {SOLID_COLORS.map((color, index) => (
                 <button
@@ -115,7 +139,6 @@ export default function BackgroundSelector({
                 </button>
               ))}
             </div>
-          </ScrollArea>
           <div className="pt-2">
             <label className="text-sm text-muted-foreground block mb-2">Custom Color</label>
             <Input
