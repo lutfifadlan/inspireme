@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import Image from 'next/image';
-import { Check, Image as ImageIcon, Paintbrush, PaintBucket } from 'lucide-react';
+import { Check, Image as ImageIcon, Paintbrush, PaintBucket, Upload } from 'lucide-react';
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -18,6 +18,7 @@ interface BackgroundSelectorProps {
   onTypeChange: (type: 'image' | 'color' | 'gradient') => void;
   onRandomize: () => void;
   bgGradientSettings: GradientSettings;
+  onCustomBackground?: (file: File) => void;
 }
 
 // Predefined solid colors
@@ -56,16 +57,21 @@ export default function BackgroundSelector({
   selectedType,
   onTypeChange,
   onRandomize,
-  bgGradientSettings
+  bgGradientSettings,
+  onCustomBackground
 }: BackgroundSelectorProps) {
-  const handleRandomize = () => {
-    if (selectedType === 'color') {
-      // Pick a random color from SOLID_COLORS
-      const randomColor = SOLID_COLORS[Math.floor(Math.random() * SOLID_COLORS.length)];
-      onSelect(randomColor);
-    } else {
-      onRandomize();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file && file.type.startsWith('image/')) {
+      onCustomBackground?.(file);
+      onTypeChange('image');
     }
+  };
+
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
   };
 
   return (
@@ -87,6 +93,21 @@ export default function BackgroundSelector({
         </TabsList>
 
         <TabsContent value="image" className="space-y-4">
+          <Button
+            onClick={handleUploadClick}
+            variant="outline"
+            className="w-full mb-4"
+          >
+            <Upload className="w-4 h-4 mr-2" />
+            Upload Custom Image
+          </Button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="hidden"
+          />
           <ScrollArea className="h-[300px] rounded-md border bg-background/50">
             <div className="grid grid-cols-2 gap-2 p-2">
               {backgrounds.map((bg, index) => (
@@ -119,26 +140,27 @@ export default function BackgroundSelector({
           </ScrollArea>
         </TabsContent>
 
+        {/* Rest of the component remains the same... */}
         <TabsContent value="color">
-            <div className="grid grid-cols-6 gap-2 p-2">
-              {SOLID_COLORS.map((color, index) => (
-                <button
-                  key={index}
-                  onClick={() => onSelect(color)}
-                  className={cn(
-                    "w-full aspect-square rounded-lg transition-all hover:ring-2 hover:ring-primary",
-                    selectedBg === color && selectedType === 'color' && "ring-2 ring-primary"
-                  )}
-                  style={{ backgroundColor: color }}
-                >
-                  {selectedBg === color && selectedType === 'color' && (
-                    <div className="flex items-center justify-center h-full">
-                      <Check className="w-4 h-4 text-white drop-shadow-md" />
-                    </div>
-                  )}
-                </button>
-              ))}
-            </div>
+          <div className="grid grid-cols-6 gap-2 p-2">
+            {SOLID_COLORS.map((color, index) => (
+              <button
+                key={index}
+                onClick={() => onSelect(color)}
+                className={cn(
+                  "w-full aspect-square rounded-lg transition-all hover:ring-2 hover:ring-primary",
+                  selectedBg === color && selectedType === 'color' && "ring-2 ring-primary"
+                )}
+                style={{ backgroundColor: color }}
+              >
+                {selectedBg === color && selectedType === 'color' && (
+                  <div className="flex items-center justify-center h-full">
+                    <Check className="w-4 h-4 text-white drop-shadow-md" />
+                  </div>
+                )}
+              </button>
+            ))}
+          </div>
           <div className="pt-2">
             <label className="text-sm text-muted-foreground block mb-2">Custom Color</label>
             <Input
@@ -161,7 +183,7 @@ export default function BackgroundSelector({
       </Tabs>
 
       <Button
-        onClick={handleRandomize}
+        onClick={onRandomize}
         variant="outline"
         className="w-full"
       >
