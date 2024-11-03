@@ -285,35 +285,13 @@ export const GRADIENT_PRESETS: { label: string; value: GradientSettings }[] = [
     }
   },
   {
-    label: "Peachy Sunset",
+    label: "Neon Dreams",
     value: {
       type: "linear",
       angle: 45,
       stops: [
-        { color: "#FF7E5F", position: 0 },
-        { color: "#FEB47B", position: 100 }
-      ]
-    }
-  },
-  {
-    label: "Blueberry",
-    value: {
-      type: "linear",
-      angle: 45,
-      stops: [
-        { color: "#4A00E0", position: 0 },
-        { color: "#8E2DE2", position: 100 }
-      ]
-    }
-  },
-  {
-    label: "Sunrise",
-    value: {
-      type: "linear",
-      angle: 90,
-      stops: [
-        { color: "#FF5F6D", position: 0 },
-        { color: "#FFC371", position: 100 }
+        { color: "#ff00ff", position: 0 },
+        { color: "#00ff00", position: 100 }
       ]
     }
   },
@@ -325,17 +303,6 @@ export const GRADIENT_PRESETS: { label: string; value: GradientSettings }[] = [
       stops: [
         { color: "#00B09B", position: 0 },
         { color: "#96C93D", position: 100 }
-      ]
-    }
-  },
-  {
-    label: "Frosted Ocean",
-    value: {
-      type: "linear",
-      angle: 180,
-      stops: [
-        { color: "#00C6FF", position: 0 },
-        { color: "#0072FF", position: 100 }
       ]
     }
   },
@@ -358,39 +325,6 @@ export const GRADIENT_PRESETS: { label: string; value: GradientSettings }[] = [
       stops: [
         { color: "#DA22FF", position: 0 },
         { color: "#9733EE", position: 100 }
-      ]
-    }
-  },
-  {
-    label: "Golden Sunset",
-    value: {
-      type: "linear",
-      angle: 45,
-      stops: [
-        { color: "#F9D423", position: 0 },
-        { color: "#FF4E50", position: 100 }
-      ]
-    }
-  },
-  {
-    label: "Twilight",
-    value: {
-      type: "linear",
-      angle: 90,
-      stops: [
-        { color: "#4A00E0", position: 0 },
-        { color: "#8E2DE2", position: 100 }
-      ]
-    }
-  },
-  {
-    label: "Ocean Breeze",
-    value: {
-      type: "linear",
-      angle: 180,
-      stops: [
-        { color: "#00C6FF", position: 0 },
-        { color: "#0072FF", position: 100 }
       ]
     }
   },
@@ -421,25 +355,73 @@ export const GRADIENT_PRESETS: { label: string; value: GradientSettings }[] = [
     }
   },
   {
-    label: 'Radial Blue',
+    label: "Radial Blue",
     value: {
-      type: 'radial',
+      type: "radial",
       position: { x: 50, y: 50 },
       stops: [
-        { color: '#00134c', position: 0 },
-        { color: '#0066ff', position: 100 }
+        { color: "#00134c", position: 0 },
+        { color: "#0066ff", position: 100 }
       ]
     }
   },
   {
-    label: 'Radial Sunset',
+    label: "Radial Sunset",
     value: {
-      type: 'radial',
+      type: "radial",
       position: { x: 50, y: 100 },
       stops: [
-        { color: '#ff8a00', position: 0 },
-        { color: '#e52e71', position: 100 }
+        { color: "#ff8a00", position: 0 },
+        { color: "#e52e71", position: 100 }
       ]
     }
   },
+  {
+    label: "Cyberpunk",
+    value: {
+      type: "linear",
+      angle: 45,
+      stops: [
+        { color: "#FF00FF", position: 0 },
+        { color: "#00FFFF", position: 50 },
+        { color: "#FF00FF", position: 100 }
+      ]
+    }
+  },
+  {
+    label: "Dark Matter",
+    value: {
+      type: "radial",
+      position: { x: 50, y: 50 },
+      stops: [
+        { color: "#300030", position: 0 },
+        { color: "#4B0082", position: 50 },
+        { color: "#000000", position: 100 }
+      ]
+    }
+  },
+  {
+    label: "Emerald Dream",
+    value: {
+      type: "linear",
+      angle: 135,
+      stops: [
+        { color: "#004D40", position: 0 },
+        { color: "#00C853", position: 50 },
+        { color: "#64DD17", position: 100 }
+      ]
+    }
+  },
+  {
+    label: "Cosmic Fusion",
+    value: {
+      type: "radial",
+      position: { x: 50, y: 50 },
+      stops: [
+        { color: "#FF3CAC", position: 0 },
+        { color: "#784BA0", position: 50 },
+        { color: "#2B86C5", position: 100 }
+      ]
+    }
+  }
 ];
