@@ -1,6 +1,7 @@
 import React from 'react';
 import { WALLPAPER_PRESETS } from "@/lib/constants";
 import { GradientSettings } from '@/lib/interface';
+import { cn } from "@/lib/utils";
 
 interface WallpaperPreviewProps {
   backgroundUrl: string;
@@ -14,6 +15,7 @@ interface WallpaperPreviewProps {
   gradientSettings: GradientSettings;
   selectedPreset: typeof WALLPAPER_PRESETS[0];
   customSize?: { width: number; height: number };
+  isMonochrome: boolean;
 }
 
 export function WallpaperPreview({
@@ -28,6 +30,7 @@ export function WallpaperPreview({
   gradientSettings,
   selectedPreset,
   customSize,
+  isMonochrome,
 }: WallpaperPreviewProps) {
   // Create background style
   const getBackgroundStyle = () => {
@@ -121,8 +124,14 @@ export function WallpaperPreview({
       style={{ aspectRatio: getAspectRatio() }}
     >
       <div
-        className="absolute inset-0 w-full h-full"
-        style={getBackgroundStyle()}
+        className={cn(
+          "absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity",
+          isMonochrome && "grayscale"
+        )}
+        style={{
+          backgroundImage: `url(${backgroundUrl})`,
+          ...getBackgroundStyle(),
+        }}
       />
       <div className="relative w-full h-full flex items-center justify-center">
         <p

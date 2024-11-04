@@ -12,3 +12,8 @@ export interface GradientSettings {
   };
   stops: GradientStop[];
 }
+
+export interface BackgroundSettings {
+  isMonochrome?: boolean;
+  // ... any other existing properties
+}

@@ -3,7 +3,7 @@ import { GradientSettings } from "./interface";
 export const BACKGROUNDS = [
   "https://images.unsplash.com/photo-1469474968028-56623f02e42e",
   "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b",
-  "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05",
+  "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05", 
   "https://images.unsplash.com/photo-1441974231531-c6227db76b6e",
   "https://images.unsplash.com/photo-1472214103451-9374bd1c798e",
   "https://images.unsplash.com/photo-1682686580391-615b1f28e5ee",
@@ -15,8 +15,6 @@ export const BACKGROUNDS = [
   "https://images.unsplash.com/photo-1476673160081-cf065607f449",
   "https://images.unsplash.com/photo-1509114397022-ed747cca3f65",
   "https://images.unsplash.com/photo-1566024287286-457247b70310",
-  "https://images.unsplash.com/photo-1557683311-eac922347aa1",
-  "https://images.unsplash.com/photo-1579546929518-9e396f3cc809",
   "https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d",
   "https://images.unsplash.com/photo-1505322022379-7c3353ee6291",
   "https://images.unsplash.com/photo-1517685352821-92cf88aee5a5",
@@ -29,6 +27,20 @@ export const BACKGROUNDS = [
   "https://images.unsplash.com/photo-1419242902214-272b3f66ee7a",
   "https://images.unsplash.com/photo-1495616811223-4d98c6e9c869",
   "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b",
+  "https://images.unsplash.com/photo-1454496522488-7a8e488e8606",
+  "https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99",
+  "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8",
+  "https://images.unsplash.com/photo-1471922694854-ff1b63b20054",
+  "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
+  "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
+  "https://images.unsplash.com/photo-1493246507139-91e8fad9978e",
+  "https://images.unsplash.com/photo-1448375240586-882707db888b",
+  "https://images.unsplash.com/photo-1511497584788-876760111969",
+  "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9",
+  "https://images.unsplash.com/photo-1444723121867-7a241cacace9",
+  "https://images.unsplash.com/photo-1550859492-d5da9d8e45f3",
+  "https://images.unsplash.com/photo-1557672172-298e090bd0f1",
+  "https://images.unsplash.com/photo-1470770903676-69b98201ea1c",
 ];
 
 export const FONTS = [
@@ -90,6 +102,30 @@ export const MOTIVATIONAL_QUOTES = [
   "The only way to do great work is to love what you do",
   "Don't count the days, make the days count",
   "Champions keep playing until they get it right",
+  "The only thing standing between you and your goal is the story you keep telling yourself",
+  "You are one decision away from a completely different life",
+  "The more you seek the uncomfortable, the more you will become comfortable",
+  "You have to be willing to do what others won't, to achieve what others don't",
+  "The pain you feel today will be the strength you feel tomorrow",
+  "Don't let your mind bully your body",
+  "The only way to truly grow is to push yourself beyond your limits",
+  "Success is not about how much money you make, it's about the difference you make in people's lives",
+  "You can't cheat the grind, it knows how much you've invested",
+  "The more you sweat in training, the less you bleed in battle",
+  "The only way to achieve the impossible is to believe it is possible",
+  "You are the master of your fate, the captain of your soul",
+  "The only thing that can stop you is you",
+  "The harder you work for something, the greater you'll feel when you achieve it",
+  "Success is not for the lazy",
+  "The only limit to our realization of tomorrow is our doubts of today",
+  "You have to be at your strongest when you're feeling at your weakest",
+  "The only way to do great work is to love what you do",
+  "Don't be afraid to give up the good to go for the great",
+  "The only way to achieve greatness is to push yourself beyond your limits",
+  "The only way to succeed is to never give up",
+  "The only way to achieve your dreams is to work hard and never give up",
+  "The only way to achieve your goals is to stay focused and never give up",
+  "Just ship it",
 ];
 
 export const WALLPAPER_PRESETS = [
@@ -144,7 +180,7 @@ export const WALLPAPER_PRESETS = [
 ];
 
 export const MAX_FONT_SIZE = 400;
-export const MIN_FONT_SIZE = 1;
+export const MIN_FONT_SIZE = 0;
 
 export const GRADIENT_PRESETS: { label: string; value: GradientSettings }[] = [
   {
