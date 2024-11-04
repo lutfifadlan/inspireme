@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, useEffect } from "react";
 import { WallpaperPreview } from "@/components/wallpaper-preview";
 import { WallpaperControls } from "@/components/wallpaper-controls";
 import { GridPattern } from "@/components/ui/grid-pattern";
@@ -8,6 +8,8 @@ import { BACKGROUNDS, FONTS, WALLPAPER_PRESETS, GRADIENT_PRESETS } from "@/lib/c
 import { Loader2 } from "lucide-react";
 import { GradientSettings } from "@/lib/interface";
 import { CANVAS_FONT_MAPPING } from '@/lib/fonts';
+import { useScreenSize } from "@/lib/hooks/useScreenSize";
+import { TextPosition } from "@/lib/interface";
 
 const LoadingOverlay = ({ message = "Loading..." }) => {
   return (
@@ -64,6 +66,9 @@ const loadFontWithWeight = async (fontName: string, weight: string, fontSize: nu
 };
 
 export default function Home() {
+  // Get screen size first
+  const screenSize = useScreenSize();
+  
   // Text and Font States
   const [text, setText] = useState("Dream Big, Work Hard");
   const [fontSize, setFontSize] = useState(50);
@@ -88,14 +93,35 @@ export default function Home() {
   const [randomizing, setRandomizing] = useState(false);
   
   // Size States
-  const [selectedPreset, setSelectedPreset] = useState(WALLPAPER_PRESETS[2]); // FHD by default
-  const [customSize, setCustomSize] = useState({ width: 1920, height: 1080 });
+  const [selectedPreset, setSelectedPreset] = useState(WALLPAPER_PRESETS.find(p => p.id === "custom")!);
+  const [customSize, setCustomSize] = useState({ 
+    width: screenSize.width || 1920, 
+    height: screenSize.height || 1080 
+  });
   
   // Download State
   const [downloading, setDownloading] = useState(false);
 
   // Monochrome State
   const [isMonochrome, setIsMonochrome] = useState(false);
+
+  // Text Position State
+  const [textPosition, setTextPosition] = useState<TextPosition>({ 
+    x: 50, 
+    y: 50, 
+    alignment: 'center',
+    verticalAlignment: 'middle'
+  });
+
+  // Update custom size when screen size changes
+  useEffect(() => {
+    if (screenSize.width && screenSize.height) {
+      setCustomSize({
+        width: screenSize.width,
+        height: screenSize.height
+      });
+    }
+  }, [screenSize.width, screenSize.height]);
 
   const handleTextChange = (e: ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
@@ -205,7 +231,7 @@ export default function Home() {
       ctx.font = `${weight} ${fontSize}px "${fontName}", -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`;
       
       // Force font settings
-      ctx.textAlign = "center";
+      ctx.textAlign = textPosition.alignment;
       ctx.textBaseline = "middle";
       
       // Ensure the font is applied
@@ -246,11 +272,15 @@ export default function Home() {
 
         // Draw each line
         lines.forEach((line, index) => {
-          ctx.fillText(
-            line,
-            canvas.width / 2,
-            startY + (index * lineHeight)
-          );
+          const x = canvas.width * (textPosition.x / 100);
+          const y = canvas.height * (textPosition.y / 100) + (index * lineHeight) - ((lines.length - 1) * lineHeight / 2);
+          
+          if (gradientSettings.type === 'solid') {
+            ctx.fillText(line, x, y);
+          } else {
+            // ... gradient text drawing logic ...
+            ctx.fillText(line, x, y);
+          }
         });
       } else {
         // For gradient text
@@ -358,6 +388,7 @@ export default function Home() {
                 selectedPreset={selectedPreset}
                 customSize={customSize}
                 isMonochrome={isMonochrome}
+                textPosition={textPosition}
               />
               {randomizing && <LoadingOverlay message="Loading new background..." />}
               {downloading && <LoadingOverlay message="Generating wallpaper..." />}
@@ -393,6 +424,8 @@ export default function Home() {
               onBgGradientChange={setBgGradientSettings}
               isMonochrome={isMonochrome}
               onMonochromeChange={setIsMonochrome}
+              textPosition={textPosition}
+              onTextPositionChange={setTextPosition}
             />
           </div>
         </div>

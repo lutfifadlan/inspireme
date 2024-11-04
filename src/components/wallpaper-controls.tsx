@@ -1,7 +1,7 @@
 "use client";
 
 import { ChangeEvent, useRef, useEffect } from "react";
-import { Download, RefreshCcw, Type, Image as ImageIcon, Sparkles, Monitor, Smartphone } from "lucide-react";
+import { Download, RefreshCcw, Type, Image as ImageIcon, Sparkles, Monitor, AlignLeft, AlignCenter, AlignRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
@@ -22,12 +22,12 @@ import {
 import { FONTS, MOTIVATIONAL_QUOTES, WALLPAPER_PRESETS, MAX_FONT_SIZE, MIN_FONT_SIZE, BACKGROUNDS } from "@/lib/constants";
 import { Separator } from "@/components/ui/separator";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import BackgroundSelector from "./background-selector";
-import { GradientSettings } from "@/lib/interface";
+import { GradientSettings, TextPosition } from "@/lib/interface";
 import { GradientControl } from "./gradient-control";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { useScreenSize } from "@/lib/hooks/useScreenSize";
 
 interface WallpaperControlsProps {
   text: string;
@@ -58,6 +58,8 @@ interface WallpaperControlsProps {
   onBgGradientChange: (settings: GradientSettings) => void;
   isMonochrome: boolean;
   onMonochromeChange: (value: boolean) => void;
+  textPosition: TextPosition;
+  onTextPositionChange: (position: TextPosition) => void;
 }
 
 export function WallpaperControls({
@@ -77,7 +79,6 @@ export function WallpaperControls({
   onDownload,
   downloading,
   onCustomBackground,
-  selectedPreset,
   onPresetChange,
   customSize,
   onCustomSizeChange,
@@ -89,8 +90,11 @@ export function WallpaperControls({
   onBgGradientChange,
   isMonochrome,
   onMonochromeChange,
+  textPosition,
+  onTextPositionChange,
 }: WallpaperControlsProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const screenSize = useScreenSize();
   
   const FONT_WEIGHTS = [
     { value: "font-thin", label: "Thin" },
@@ -285,6 +289,82 @@ export function WallpaperControls({
                   onChange={onGradientChange}
                 />
               )}
+
+              <div>
+                <label className="text-sm text-muted-foreground block mb-2">Text Position</label>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs text-muted-foreground">Horizontal (%)</label>
+                    <Slider
+                      value={[textPosition.x]}
+                      onValueChange={(values) => onTextPositionChange({ ...textPosition, x: values[0] })}
+                      min={0}
+                      max={100}
+                      step={1}
+                      className="py-4"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs text-muted-foreground">Vertical (%)</label>
+                    <Slider
+                      value={[textPosition.y]}
+                      onValueChange={(values) => onTextPositionChange({ ...textPosition, y: values[0] })}
+                      min={0}
+                      max={100}
+                      step={1}
+                      className="py-4"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-sm text-muted-foreground block mb-2">Text Alignment</label>
+                <div className="flex gap-2">
+                  <Button
+                    variant={textPosition.alignment === 'left' ? 'default' : 'outline'}
+                    size="icon"
+                    onClick={() => {
+                      onTextPositionChange({ 
+                        ...textPosition, 
+                        x: 20,  // Move to 20% from left
+                        alignment: 'left' 
+                      });
+                    }}
+                    className="w-10 h-10"
+                  >
+                    <AlignLeft className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant={textPosition.alignment === 'center' ? 'default' : 'outline'}
+                    size="icon"
+                    onClick={() => {
+                      onTextPositionChange({ 
+                        ...textPosition, 
+                        x: 50,  // Center horizontally
+                        alignment: 'center' 
+                      });
+                    }}
+                    className="w-10 h-10"
+                  >
+                    <AlignCenter className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant={textPosition.alignment === 'right' ? 'default' : 'outline'}
+                    size="icon"
+                    onClick={() => {
+                      onTextPositionChange({ 
+                        ...textPosition, 
+                        x: 80,  // Move to 80% from left
+                        alignment: 'right' 
+                      });
+                    }}
+                    className="w-10 h-10"
+                  >
+                    <AlignRight className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
             </AccordionContent>
           </AccordionItem>
 
@@ -347,57 +427,27 @@ export function WallpaperControls({
               </div>
             </AccordionTrigger>
             <AccordionContent className="space-y-4">
-              <Tabs defaultValue="desktop" className="w-full">
-                <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="desktop">
-                    <Monitor className="w-4 h-4 mr-2" />
-                    Desktop
-                  </TabsTrigger>
-                  <TabsTrigger value="mobile">
-                    <Smartphone className="w-4 h-4 mr-2" />
-                    Mobile
-                  </TabsTrigger>
-                </TabsList>
-                <TabsContent value="desktop" className="space-y-4">
-                  <Select
-                    value={selectedPreset.id}
-                    onValueChange={onPresetChange}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">
+                    Your screen size: {screenSize.width}x{screenSize.height}
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      onPresetChange("custom");
+                      onCustomSizeChange("width", screenSize.width);
+                      onCustomSizeChange("height", screenSize.height);
+                    }}
                   >
-                    <SelectTrigger className="bg-background/50">
-                      <SelectValue placeholder="Select size" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {WALLPAPER_PRESETS.filter(p => !p.id.includes("iphone") && !p.id.includes("ipad")).map((preset) => (
-                        <SelectItem key={preset.id} value={preset.id}>
-                          {preset.label} ({preset.width}x{preset.height})
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </TabsContent>
-                <TabsContent value="mobile" className="space-y-4">
-                  <Select
-                    value={selectedPreset.id}
-                    onValueChange={onPresetChange}
-                  >
-                    <SelectTrigger className="bg-background/50">
-                      <SelectValue placeholder="Select size" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {WALLPAPER_PRESETS.filter(p => p.id.includes("iphone") || p.id.includes("ipad")).map((preset) => (
-                        <SelectItem key={preset.id} value={preset.id}>
-                          {preset.label} ({preset.width}x{preset.height})
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </TabsContent>
-              </Tabs>
+                    Use Screen Size
+                  </Button>
+                </div>
 
-              {selectedPreset.id === "custom" && (
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="text-sm text-muted-foreground block mb-2">Width</label>
+                    <label className="text-sm text-muted-foreground block mb-2">Width (px)</label>
                     <Input
                       type="number"
                       value={customSize.width}
@@ -408,7 +458,7 @@ export function WallpaperControls({
                     />
                   </div>
                   <div>
-                    <label className="text-sm text-muted-foreground block mb-2">Height</label>
+                    <label className="text-sm text-muted-foreground block mb-2">Height (px)</label>
                     <Input
                       type="number"
                       value={customSize.height}
@@ -419,7 +469,7 @@ export function WallpaperControls({
                     />
                   </div>
                 </div>
-              )}
+              </div>
             </AccordionContent>
           </AccordionItem>
         </Accordion>
