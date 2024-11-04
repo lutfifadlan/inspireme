@@ -106,11 +106,10 @@ export default function Home() {
   const [isMonochrome, setIsMonochrome] = useState(false);
 
   // Text Position State
-  const [textPosition, setTextPosition] = useState<TextPosition>({ 
-    x: 50, 
-    y: 50, 
-    alignment: 'center',
-    verticalAlignment: 'middle'
+  const [textPosition, setTextPosition] = useState<TextPosition>({
+    x: 50,
+    y: 50,
+    verticalAlignment: 'center'
   });
 
   // Update custom size when screen size changes
@@ -231,7 +230,7 @@ export default function Home() {
       ctx.font = `${weight} ${fontSize}px "${fontName}", -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`;
       
       // Force font settings
-      ctx.textAlign = textPosition.alignment;
+      ctx.textAlign = 'center';
       ctx.textBaseline = "middle";
       
       // Ensure the font is applied

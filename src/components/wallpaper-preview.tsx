@@ -85,7 +85,7 @@ export function WallpaperPreviewContent({
       fontSize: `${fontSize}px`,
       fontWeight: getFontWeight(fontWeight),
       maxWidth: '80%',
-      textAlign: textPosition.alignment as 'left' | 'center' | 'right',
+      textAlign: 'center' as const,
       wordBreak: 'break-word' as const,
       textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
     };
@@ -138,10 +138,6 @@ export function WallpaperPreviewContent({
   };
 
   const getTextContainerStyle = () => {
-    const alignmentOffset = textPosition.alignment === 'left' ? 0 
-      : textPosition.alignment === 'right' ? -100 
-      : -50;
-    
     const verticalOffset = textPosition.verticalAlignment === 'top' ? 0
       : textPosition.verticalAlignment === 'bottom' ? -100
       : -50;
@@ -150,12 +146,10 @@ export function WallpaperPreviewContent({
       position: 'absolute' as const,
       left: `${textPosition.x}%`,
       top: `${textPosition.y}%`,
-      transform: `translate(${alignmentOffset}%, ${verticalOffset}%)`,
+      transform: `translate(-50%, ${verticalOffset}%)`,
       width: '100%',
       display: 'flex',
-      justifyContent: textPosition.alignment === 'left' ? 'flex-start' 
-        : textPosition.alignment === 'right' ? 'flex-end' 
-        : 'center',
+      justifyContent: 'center', // Always center horizontally
       alignItems: textPosition.verticalAlignment === 'top' ? 'flex-start'
         : textPosition.verticalAlignment === 'bottom' ? 'flex-end'
         : 'center',
