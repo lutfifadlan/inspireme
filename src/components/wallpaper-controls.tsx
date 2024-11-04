@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useRef } from "react";
+import { ChangeEvent, useRef, useEffect } from "react";
 import { Download, RefreshCcw, Type, Image as ImageIcon, Sparkles, Monitor, Smartphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,6 +26,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import BackgroundSelector from "./background-selector";
 import { GradientSettings } from "@/lib/interface";
 import { GradientControl } from "./gradient-control";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 interface WallpaperControlsProps {
   text: string;
@@ -54,6 +56,8 @@ interface WallpaperControlsProps {
   onBackgroundTypeChange: (type: 'image' | 'color' | 'gradient') => void;
   bgGradientSettings: GradientSettings;
   onBgGradientChange: (settings: GradientSettings) => void;
+  isMonochrome: boolean;
+  onMonochromeChange: (value: boolean) => void;
 }
 
 export function WallpaperControls({
@@ -83,6 +87,8 @@ export function WallpaperControls({
   onBackgroundTypeChange,
   bgGradientSettings,
   onBgGradientChange,
+  isMonochrome,
+  onMonochromeChange,
 }: WallpaperControlsProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   
@@ -108,10 +114,39 @@ export function WallpaperControls({
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file && file.type.startsWith('image/')) {
-      onCustomBackground(file);
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert('Please upload an image file');
+      return;
+    }
+
+    // Validate file size (e.g., max 5MB)
+    const maxSize = 20 * 1024 * 1024; // 20MB
+    if (file.size > maxSize) {
+      alert('File size should be less than 20MB');
+      return;
+    }
+
+    // Create object URL and update background
+    onCustomBackground(file);
+    onBackgroundTypeChange('image');
+
+    // Clean up the file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
     }
   };
+
+  useEffect(() => {
+    return () => {
+      // Cleanup object URLs when component unmounts
+      if (selectedBg.startsWith('blob:')) {
+        URL.revokeObjectURL(selectedBg);
+      }
+    };
+  }, [selectedBg]);
 
   return (
     <Card className="border border-r-2 shadow-xl bg-card/50 backdrop-blur-sm">
@@ -131,7 +166,7 @@ export function WallpaperControls({
                 <h3 className="font-medium">Text Settings</h3>
               </div>
             </AccordionTrigger>
-            <AccordionContent className="space-y-4 pt-4">
+            <AccordionContent className="space-y-4 ">
               <div>
                 <div className="flex justify-between items-center mb-2">
                   <label className="text-sm text-muted-foreground">Your Text</label>
@@ -143,7 +178,7 @@ export function WallpaperControls({
                         size="sm"
                         className="h-8"
                       >
-                        <RefreshCcw className="w-3 h-3 mr-2" />
+                        <RefreshCcw className="w-3 h-3" />
                         Random Quote
                       </Button>
                     </HoverCardTrigger>
@@ -261,7 +296,7 @@ export function WallpaperControls({
                 <h3 className="font-medium">Background Settings</h3>
               </div>
             </AccordionTrigger>
-            <AccordionContent className="space-y-4 pt-4">
+            <AccordionContent className="space-y-4">
               <BackgroundSelector
                 backgrounds={BACKGROUNDS}
                 selectedBg={selectedBg}
@@ -273,6 +308,15 @@ export function WallpaperControls({
                 bgGradientSettings={bgGradientSettings}
               />
 
+              <Button 
+                variant="outline" 
+                className="w-full"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <ImageIcon className="w-4 h-4 mr-2" />
+                Upload Custom Background
+              </Button>
+
               <input
                 type="file"
                 ref={fileInputRef}
@@ -280,6 +324,17 @@ export function WallpaperControls({
                 accept="image/*"
                 className="hidden"
               />
+
+              {backgroundType === 'image' && (
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="monochrome" className="text-sm text-muted-foreground">Monochrome Effect</Label>
+                  <Switch
+                    id="monochrome"
+                    checked={isMonochrome}
+                    onCheckedChange={onMonochromeChange}
+                  />
+                </div>
+              )}
             </AccordionContent>
           </AccordionItem>
 
@@ -291,7 +346,7 @@ export function WallpaperControls({
                 <h3 className="font-medium">Size Settings</h3>
               </div>
             </AccordionTrigger>
-            <AccordionContent className="space-y-4 pt-4">
+            <AccordionContent className="space-y-4">
               <Tabs defaultValue="desktop" className="w-full">
                 <TabsList className="grid w-full grid-cols-2">
                   <TabsTrigger value="desktop">

@@ -94,6 +94,9 @@ export default function Home() {
   // Download State
   const [downloading, setDownloading] = useState(false);
 
+  // Monochrome State
+  const [isMonochrome, setIsMonochrome] = useState(false);
+
   const handleTextChange = (e: ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
   };
@@ -354,6 +357,7 @@ export default function Home() {
                 gradientSettings={gradientSettings}
                 selectedPreset={selectedPreset}
                 customSize={customSize}
+                isMonochrome={isMonochrome}
               />
               {randomizing && <LoadingOverlay message="Loading new background..." />}
               {downloading && <LoadingOverlay message="Generating wallpaper..." />}
@@ -387,6 +391,8 @@ export default function Home() {
               onBackgroundTypeChange={setBackgroundType}
               bgGradientSettings={bgGradientSettings}
               onBgGradientChange={setBgGradientSettings}
+              isMonochrome={isMonochrome}
+              onMonochromeChange={setIsMonochrome}
             />
           </div>
         </div>

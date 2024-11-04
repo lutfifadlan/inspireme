@@ -1,6 +1,6 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import Image from 'next/image';
-import { Check, Image as ImageIcon, Paintbrush, PaintBucket, Upload } from 'lucide-react';
+import { Check, Image as ImageIcon, Paintbrush, PaintBucket, Shuffle } from 'lucide-react';
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -58,22 +58,7 @@ export default function BackgroundSelector({
   onTypeChange,
   onRandomize,
   bgGradientSettings,
-  onCustomBackground
 }: BackgroundSelectorProps) {
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file && file.type.startsWith('image/')) {
-      onCustomBackground?.(file);
-      onTypeChange('image');
-    }
-  };
-
-  const handleUploadClick = () => {
-    fileInputRef.current?.click();
-  };
-
   return (
     <div className="space-y-4">
       <Tabs value={selectedType} onValueChange={(value) => onTypeChange(value as 'image' | 'color' | 'gradient')}>
@@ -93,21 +78,6 @@ export default function BackgroundSelector({
         </TabsList>
 
         <TabsContent value="image" className="space-y-4">
-          <Button
-            onClick={handleUploadClick}
-            variant="outline"
-            className="w-full mb-4"
-          >
-            <Upload className="w-4 h-4 mr-2" />
-            Upload Custom Image
-          </Button>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="hidden"
-          />
           <ScrollArea className="h-[300px] rounded-md border bg-background/50">
             <div className="grid grid-cols-2 gap-2 p-2">
               {backgrounds.map((bg, index) => (
@@ -187,6 +157,7 @@ export default function BackgroundSelector({
         variant="outline"
         className="w-full"
       >
+        <Shuffle className="w-4 h-4 mr-2" />
         Randomize {selectedType === 'image' ? 'Background' : selectedType === 'color' ? 'Color' : 'Gradient'}
       </Button>
     </div>
