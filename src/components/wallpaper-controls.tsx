@@ -1,7 +1,7 @@
 "use client";
 
 import { ChangeEvent, useRef, useEffect } from "react";
-import { Download, RefreshCcw, Type, Image as ImageIcon, Sparkles, Monitor, AlignLeft, AlignCenter, AlignRight } from "lucide-react";
+import { Download, RefreshCcw, Type, Image as ImageIcon, Sparkles, Monitor } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
@@ -315,54 +315,6 @@ export function WallpaperControls({
                       className="py-4"
                     />
                   </div>
-                </div>
-              </div>
-
-              <div>
-                <label className="text-sm text-muted-foreground block mb-2">Text Alignment</label>
-                <div className="flex gap-2">
-                  <Button
-                    variant={textPosition.alignment === 'left' ? 'default' : 'outline'}
-                    size="icon"
-                    onClick={() => {
-                      onTextPositionChange({ 
-                        ...textPosition, 
-                        x: 20,  // Move to 20% from left
-                        alignment: 'left' 
-                      });
-                    }}
-                    className="w-10 h-10"
-                  >
-                    <AlignLeft className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant={textPosition.alignment === 'center' ? 'default' : 'outline'}
-                    size="icon"
-                    onClick={() => {
-                      onTextPositionChange({ 
-                        ...textPosition, 
-                        x: 50,  // Center horizontally
-                        alignment: 'center' 
-                      });
-                    }}
-                    className="w-10 h-10"
-                  >
-                    <AlignCenter className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant={textPosition.alignment === 'right' ? 'default' : 'outline'}
-                    size="icon"
-                    onClick={() => {
-                      onTextPositionChange({ 
-                        ...textPosition, 
-                        x: 80,  // Move to 80% from left
-                        alignment: 'right' 
-                      });
-                    }}
-                    className="w-10 h-10"
-                  >
-                    <AlignRight className="h-4 w-4" />
-                  </Button>
                 </div>
               </div>
             </AccordionContent>

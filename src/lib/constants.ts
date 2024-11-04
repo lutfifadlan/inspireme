@@ -22,18 +22,15 @@ export const BACKGROUNDS = [
   "https://images.unsplash.com/photo-1519681393784-d120267933ba",
   "https://images.unsplash.com/photo-1493246507139-91e8fad9978e",
   "https://images.unsplash.com/photo-1682686581580-d99b0230064e",
-  "https://images.unsplash.com/photo-1682687220742-aba13b6e50ba",
   "https://images.unsplash.com/photo-1462332420958-a05d1e002413",
   "https://images.unsplash.com/photo-1419242902214-272b3f66ee7a",
   "https://images.unsplash.com/photo-1495616811223-4d98c6e9c869",
-  "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b",
   "https://images.unsplash.com/photo-1454496522488-7a8e488e8606",
   "https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99",
   "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8",
   "https://images.unsplash.com/photo-1471922694854-ff1b63b20054",
   "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
   "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
-  "https://images.unsplash.com/photo-1493246507139-91e8fad9978e",
   "https://images.unsplash.com/photo-1448375240586-882707db888b",
   "https://images.unsplash.com/photo-1511497584788-876760111969",
   "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9",
@@ -41,6 +38,7 @@ export const BACKGROUNDS = [
   "https://images.unsplash.com/photo-1550859492-d5da9d8e45f3",
   "https://images.unsplash.com/photo-1557672172-298e090bd0f1",
   "https://images.unsplash.com/photo-1470770903676-69b98201ea1c",
+  "https://images.unsplash.com/photo-1513553404607-988bf2703777",
 ];
 
 export const FONTS = [

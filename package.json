@@ -2,11 +2,15 @@
   "name": "inspireme",
   "version": "0.1.0",
   "private": true,
+  "main": "electron/main.js",
   "scripts": {
     "dev": "bun next dev",
     "build": "bun next build",
     "start": "bun next start",
-    "lint": "bun next lint"
+    "lint": "bun next lint",
+    "electron-dev": "concurrently \"npm run dev\" \"wait-on http://localhost:3000 && electron .\"",
+    "electron-build": "next build && electron-builder",
+    "electron-pack": "electron-builder -c.extraMetadata.main=build/electron/main.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
@@ -66,6 +70,40 @@
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "eslint": "^8",
-    "eslint-config-next": "14.2.16"
+    "eslint-config-next": "14.2.16",
+    "electron": "^33.0.2",
+    "electron-builder": "^25.1.8",
+    "electron-is-dev": "^3.0.1",
+    "wait-on": "^8.0.1",
+    "concurrently": "^9.0.1"
+  },
+  "build": {
+    "appId": "com.inspireme.app",
+    "productName": "InspireMe",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "public/icon.ico"
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "icon": "public/icon.icns"
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "icon": "public/icon.png"
+    }
   }
 }

@@ -19,8 +19,7 @@ export interface BackgroundSettings {
 }
 
 export interface TextPosition {
-  x: number;  // 0-100 percentage
-  y: number;  // 0-100 percentage
-  alignment: 'left' | 'center' | 'right';
-  verticalAlignment: 'top' | 'middle' | 'bottom';  // Add vertical alignment
+  x: number;
+  y: number;
+  verticalAlignment: 'top' | 'center' | 'bottom';
 }
