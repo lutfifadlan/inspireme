@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { WALLPAPER_PRESETS } from "@/lib/constants";
-import { GradientSettings } from '@/lib/interface';
+import { GradientSettings, TextPosition } from '@/lib/interface';
 import { cn } from "@/lib/utils";
+import { FullSizePreview } from './full-size-preview';
 
-interface WallpaperPreviewProps {
+export interface WallpaperPreviewProps {
   backgroundUrl: string;
   backgroundType: 'image' | 'color' | 'gradient';
   bgGradientSettings: GradientSettings;
@@ -16,9 +17,12 @@ interface WallpaperPreviewProps {
   selectedPreset: typeof WALLPAPER_PRESETS[0];
   customSize?: { width: number; height: number };
   isMonochrome: boolean;
+  forceActualSize?: boolean;
+  textPosition: TextPosition;
 }
 
-export function WallpaperPreview({
+// Separate the preview content into its own component to avoid duplication
+export function WallpaperPreviewContent({
   backgroundUrl,
   backgroundType,
   bgGradientSettings,
@@ -31,7 +35,10 @@ export function WallpaperPreview({
   selectedPreset,
   customSize,
   isMonochrome,
-}: WallpaperPreviewProps) {
+  forceActualSize,
+  isFullSize,
+  textPosition,
+}: WallpaperPreviewProps & { isFullSize?: boolean }) {
   // Create background style
   const getBackgroundStyle = () => {
     if (backgroundType === 'image') {
@@ -78,7 +85,7 @@ export function WallpaperPreview({
       fontSize: `${fontSize}px`,
       fontWeight: getFontWeight(fontWeight),
       maxWidth: '80%',
-      textAlign: 'center' as const,
+      textAlign: textPosition.alignment as 'left' | 'center' | 'right',
       wordBreak: 'break-word' as const,
       textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
     };
@@ -111,17 +118,58 @@ export function WallpaperPreview({
 
   // Calculate aspect ratio based on selected preset or custom size
   const getAspectRatio = () => {
-    if (!selectedPreset) return '16 / 9'; // Default fallback
-    const size = selectedPreset.id === "custom" && customSize 
-      ? customSize 
-      : selectedPreset;
-    return `${size.width} / ${size.height}`;
+    if (selectedPreset.id === "custom" && customSize) {
+      return `${customSize.width} / ${customSize.height}`;
+    }
+    return `${selectedPreset.width} / ${selectedPreset.height}`;
+  };
+
+  const containerStyle = {
+    aspectRatio: getAspectRatio(),
+    ...(forceActualSize && selectedPreset.id === "custom" && customSize ? {
+      width: `${customSize.width}px`,
+      height: `${customSize.height}px`
+    } : {
+      ...(!isFullSize && {
+        maxWidth: '600px',
+        width: '100%',
+      })
+    })
+  };
+
+  const getTextContainerStyle = () => {
+    const alignmentOffset = textPosition.alignment === 'left' ? 0 
+      : textPosition.alignment === 'right' ? -100 
+      : -50;
+    
+    const verticalOffset = textPosition.verticalAlignment === 'top' ? 0
+      : textPosition.verticalAlignment === 'bottom' ? -100
+      : -50;
+
+    return {
+      position: 'absolute' as const,
+      left: `${textPosition.x}%`,
+      top: `${textPosition.y}%`,
+      transform: `translate(${alignmentOffset}%, ${verticalOffset}%)`,
+      width: '100%',
+      display: 'flex',
+      justifyContent: textPosition.alignment === 'left' ? 'flex-start' 
+        : textPosition.alignment === 'right' ? 'flex-end' 
+        : 'center',
+      alignItems: textPosition.verticalAlignment === 'top' ? 'flex-start'
+        : textPosition.verticalAlignment === 'bottom' ? 'flex-end'
+        : 'center',
+      padding: '0 10%', // Add padding to prevent text from touching edges
+    };
   };
 
   return (
     <div 
-      className="relative rounded-xl overflow-hidden shadow-2xl ring-1 ring-border/20"
-      style={{ aspectRatio: getAspectRatio() }}
+      className={cn(
+        "relative overflow-hidden shadow-2xl",
+        !isFullSize && "rounded-xl ring-1 ring-border/20"
+      )}
+      style={containerStyle}
     >
       <div
         className={cn(
@@ -133,14 +181,42 @@ export function WallpaperPreview({
           ...getBackgroundStyle(),
         }}
       />
-      <div className="relative w-full h-full flex items-center justify-center">
-        <p
-          className={`${selectedFont} transition-all duration-200`}
-          style={getTextStyle()}
-        >
-          {text}
-        </p>
+      <div className="relative w-full h-full">
+        <div style={getTextContainerStyle()}>
+          <p
+            className={`${selectedFont} transition-all duration-200`}
+            style={getTextStyle()}
+          >
+            {text}
+          </p>
+        </div>
       </div>
     </div>
+  );
+}
+
+export function WallpaperPreview(props: WallpaperPreviewProps) {
+  const [showFullSize, setShowFullSize] = useState(false);
+
+  return (
+    <>
+      <div className="space-y-2">
+        <div 
+          onClick={() => setShowFullSize(true)}
+          className="cursor-pointer hover:opacity-90 transition-opacity max-w-full flex justify-center"
+        >
+          <WallpaperPreviewContent {...props} />
+        </div>
+        <p className="text-sm text-muted-foreground text-center">
+          Click preview to see actual wallpaper size
+        </p>
+      </div>
+      
+      <FullSizePreview 
+        {...props}
+        isOpen={showFullSize}
+        onClose={() => setShowFullSize(false)}
+      />
+    </>
   );
 }
