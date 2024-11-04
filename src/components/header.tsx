@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Github } from 'lucide-react';
 import { Logo } from './logo';
 import GridPattern from './ui/grid-pattern';
+import { DownloadAppButton } from './download-app-button';
 
 export function Header() {
   return (
@@ -36,6 +37,8 @@ export function Header() {
                 </Button>
                 <div className="mx-2 w-px h-5 bg-border/40" />
                 <ThemeToggle />
+                <div className="mx-2 w-px h-5 bg-border/40" />
+                <DownloadAppButton />
               </div>
             </div>
           </div>

@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Inspire Me - Motivational Wallpaper Generator
 
-## Getting Started
+<p align="center">
+  <img src="public/preview.png" alt="Inspire Me Preview" width="600"/>
+</p>
 
-First, run the development server:
+A modern, open-source wallpaper generator that creates beautiful motivational wallpapers with customizable quotes, fonts, and backgrounds. Built with Next.js 14, React, and Tailwind CSS.
 
+## ✨ Features
+
+- 🖼️ Create custom wallpapers with inspiring quotes
+- 🎨 Multiple background options (images, solid colors, gradients)
+- 🔤 Customizable fonts, sizes, and text effects
+- 📱 Responsive design with custom size presets
+- 🎯 Precise text positioning control
+- 🖌️ Gradient text support
+- 🌓 Dark mode support
+- 📥 High-quality PNG export
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18+ 
+- bun
+
+### Installation
+
+1. Clone the repository
+2. Run `bun install` to install the dependencies
+3. Run `bun dev` to start the development server
+
+## 📦 Building Desktop App
+
+### Development
+
+1. To run the desktop app in development mode:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. In a separate terminal, run the Electron app:
+```bash
+bun electron-dev
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Publishing Desktop App
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+To create distributable packages for the desktop app:
 
-## Learn More
+1. Build the Next.js application:
+```bash
+bun build
+```
+2. Package the Electron app:
+```bash
+bun electron-build
+```
+This will create platform-specific distributables in the `dist` directory:
+- Windows: `.exe` installer
+- macOS: `.dmg` file
+- Linux: `.AppImage` and `.deb` packages
 
-To learn more about Next.js, take a look at the following resources:
+#### Publishing Options
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+You can customize the build settings in `electron-builder.yml` or through the `electron-builder` configuration in `package.json`. Some common options include:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `--win`: Build for Windows
+- `--mac`: Build for macOS
+- `--linux`: Build for Linux
+- `--x64`: Build for x64 architecture
+- `--arm64`: Build for ARM64 architecture
 
-## Deploy on Vercel
+Example:
+```bash
+bun electron-build --win --mac
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This addition to the README provides clear instructions for both development and publishing of the Electron app. It covers:
+1. How to run the app in development mode
+2. How to build distributable packages
+3. Platform-specific build options
+4. Common build configurations
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Make sure you have the corresponding scripts in your `package.json` and the necessary electron-builder configuration set up to support these commands.
