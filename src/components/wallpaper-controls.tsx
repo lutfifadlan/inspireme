@@ -29,6 +29,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { useScreenSize } from "@/lib/hooks/useScreenSize";
 
+
 interface WallpaperControlsProps {
   text: string;
   onTextChange: (e: ChangeEvent<HTMLInputElement>) => void;
@@ -43,7 +44,7 @@ interface WallpaperControlsProps {
   gradientSettings: GradientSettings;
   onGradientChange: (settings: GradientSettings) => void;
   onRandomBackground: () => void;
-  onDownload: () => void;
+  onDownload: () => Promise<void>;
   downloading: boolean;
   onCustomBackground: (file: File) => void;
   selectedPreset: typeof WALLPAPER_PRESETS[0];

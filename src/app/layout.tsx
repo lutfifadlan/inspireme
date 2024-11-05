@@ -35,7 +35,7 @@ export default function RootLayout({
           <main className="flex-grow">
             {children}
           </main>
-          <Footer />
+          {typeof window !== 'undefined' ? <Footer /> : null}
         </ThemeProvider>
       </body>
     </html>

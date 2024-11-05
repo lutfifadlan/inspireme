@@ -5,8 +5,18 @@ import { Github } from 'lucide-react';
 import { Logo } from './logo';
 import GridPattern from './ui/grid-pattern';
 import { DownloadAppButton } from './download-app-button';
+import { useEffect, useState } from 'react';
 
 export function Header() {
+  const [isBrowser, setIsBrowser] = useState(true);
+
+  useEffect(() => {
+    // Check if we're in a browser environment
+    if (!(window?.navigator?.userAgent?.includes('Tauri'))) {
+      setIsBrowser(false);
+    }
+  }, []);
+
   return (
     <div className="w-full px-4 pt-6 pb-4 overflow-visible relative">
       <GridPattern strokeDasharray="4 2" />
@@ -25,19 +35,21 @@ export function Header() {
 
               {/* Actions */}
               <div className="flex items-center">
-                <Link
-                  href="https://github.com/lutfifadlan/inspireme"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center h-10 w-10 rounded-md text-muted-foreground hover:text-foreground transition-colors"
-                  aria-label="View on GitHub"
-                >
-                  <Github className="h-4 w-4" />
-                </Link>
+                {isBrowser && (
+                  <Link
+                    href="https://github.com/lutfifadlan/inspireme"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center h-10 w-10 rounded-md text-muted-foreground hover:text-foreground transition-colors"
+                    aria-label="View on GitHub"
+                  >
+                    <Github className="h-4 w-4" />
+                  </Link>
+                )}
                 <div className="mx-2 w-px h-5 bg-border/40" />
                 <ThemeToggle />
                 <div className="mx-2 w-px h-5 bg-border/40" />
-                <DownloadAppButton />
+                {isBrowser && <DownloadAppButton />}
               </div>
             </div>
           </div>
