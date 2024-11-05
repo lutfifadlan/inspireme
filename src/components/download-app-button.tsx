@@ -8,6 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import Link from "next/link";
 
 const DOWNLOAD_LINKS = {
   windows: "https://github.com/lutfifadlan/inspireme/releases/latest/download/InspireMe.exe",
@@ -16,10 +17,6 @@ const DOWNLOAD_LINKS = {
 };
 
 export function DownloadAppButton() {
-  const handleDownload = (url: string) => {
-    window.open(url, '_blank');
-  };
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -28,14 +25,32 @@ export function DownloadAppButton() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onSelect={() => handleDownload(DOWNLOAD_LINKS.windows)} className="cursor-pointer">
-          Download for Windows
+        <DropdownMenuItem asChild className="cursor-pointer">
+          <Link
+            href={DOWNLOAD_LINKS.windows}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Download for Windows
+          </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem onSelect={() => handleDownload(DOWNLOAD_LINKS.mac)} className="cursor-pointer">
-          Download for Mac
+        <DropdownMenuItem asChild className="cursor-pointer">
+          <Link
+            href={DOWNLOAD_LINKS.mac}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Download for Mac
+          </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem onSelect={() => handleDownload(DOWNLOAD_LINKS.linux)} className="cursor-pointer">
-          Download for Linux
+        <DropdownMenuItem asChild className="cursor-pointer">
+          <Link
+            href={DOWNLOAD_LINKS.linux}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Download for Linux
+          </Link>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

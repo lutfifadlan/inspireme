@@ -1,7 +1,6 @@
 "use client";
 import Link from 'next/link';
 import { ThemeToggle } from '@/components/theme-toggle';
-import { Button } from '@/components/ui/button';
 import { Github } from 'lucide-react';
 import { Logo } from './logo';
 import GridPattern from './ui/grid-pattern';
@@ -26,15 +25,15 @@ export function Header() {
 
               {/* Actions */}
               <div className="flex items-center">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-muted-foreground hover:text-foreground transition-colors"
-                  onClick={() => window.open('https://github.com/lutfifadlan/inspireme', '_blank')}
+                <Link
+                  href="https://github.com/lutfifadlan/inspireme"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center h-10 w-10 rounded-md text-muted-foreground hover:text-foreground transition-colors"
                   aria-label="View on GitHub"
                 >
-                  <Github className="h-5 w-5" />
-                </Button>
+                  <Github className="h-4 w-4" />
+                </Link>
                 <div className="mx-2 w-px h-5 bg-border/40" />
                 <ThemeToggle />
                 <div className="mx-2 w-px h-5 bg-border/40" />
