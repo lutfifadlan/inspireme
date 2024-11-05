@@ -10,6 +10,9 @@ import { GradientSettings } from "@/lib/interface";
 import { CANVAS_FONT_MAPPING } from '@/lib/fonts';
 import { useScreenSize } from "@/lib/hooks/useScreenSize";
 import { TextPosition } from "@/lib/interface";
+import { save } from '@tauri-apps/plugin-dialog';
+import { writeFile } from '@tauri-apps/plugin-fs';
+import { type } from '@tauri-apps/plugin-os';
 
 const LoadingOverlay = ({ message = "Loading..." }) => {
   return (
@@ -325,11 +328,46 @@ export default function Home() {
       ctx.shadowColor = 'transparent';
       ctx.shadowBlur = 0;
 
-      // Download the image
-      const link = document.createElement("a");
-      link.download = "inspire-me.png";
-      link.href = canvas.toDataURL("image/png");
-      link.click();
+      const blob = await new Promise<Blob>((resolve) => {
+        canvas.toBlob((blob) => resolve(blob!), 'image/png');
+      });
+
+      // Convert blob to Uint8Array
+      const arrayBuffer = await blob.arrayBuffer();
+      const uint8Array = new Uint8Array(arrayBuffer);
+
+      try {
+        // Check if we're running in Tauri
+        const platform = await type();
+        
+        if (platform) {
+          // Running in Tauri - use native save dialog
+          const filePath = await save({
+            filters: [{
+              name: 'Image',
+              extensions: ['png']
+            }],
+            defaultPath: 'inspire-me.png'
+          });
+
+          if (filePath) {
+            await writeFile(filePath, uint8Array);
+          }
+        } else {
+          // Running in browser - use traditional download
+          const link = document.createElement("a");
+          link.download = "inspire-me.png";
+          link.href = canvas.toDataURL("image/png");
+          link.click();
+        }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (e) {
+        // Fallback to browser download if Tauri APIs fail
+        const link = document.createElement("a");
+        link.download = "inspire-me.png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      }
     } catch (error) {
       console.error('Error during wallpaper generation:', error);
     } finally {
