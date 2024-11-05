@@ -1,4 +1,3 @@
-// lib/fonts.ts
 import { Inter, Playfair_Display, Montserrat, Roboto, Lora, Oswald, Raleway, Poppins, Fira_Code, Merriweather } from 'next/font/google';
 
 export const inter = Inter({

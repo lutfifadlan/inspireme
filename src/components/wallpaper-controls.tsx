@@ -160,7 +160,7 @@ export function WallpaperControls({
           Customize Your Wallpaper
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-4">
         <Accordion type="single" collapsible defaultValue="text" className="space-y-4">
           {/* Text Settings Section */}
           <AccordionItem value="text" className="border-none">
@@ -170,29 +170,29 @@ export function WallpaperControls({
                 <h3 className="font-medium">Text Settings</h3>
               </div>
             </AccordionTrigger>
-            <AccordionContent className="space-y-4 ">
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <label className="text-sm text-muted-foreground">Your Text</label>
-                  <HoverCard>
-                    <HoverCardTrigger asChild>
-                      <Button
-                        onClick={handleRandomQuote}
-                        variant="outline"
-                        size="sm"
-                        className="h-8"
-                      >
-                        <RefreshCcw className="w-3 h-3" />
-                        Random Quote
-                      </Button>
-                    </HoverCardTrigger>
-                    <HoverCardContent className="w-80">
-                      <p className="text-sm text-muted-foreground">
-                        Click to generate a random motivational quote from our curated collection.
-                      </p>
-                    </HoverCardContent>
-                  </HoverCard>
-                </div>
+            <AccordionContent className="space-y-4">
+              <div className="flex justify-between items-center mb-2">
+                <label className="text-sm text-muted-foreground">Your Text</label>
+                <HoverCard>
+                  <HoverCardTrigger asChild>
+                    <Button
+                      onClick={handleRandomQuote}
+                      variant="outline"
+                      size="sm"
+                      className="h-8"
+                    >
+                      <RefreshCcw className="w-3 h-3" />
+                      Random Quote
+                    </Button>
+                  </HoverCardTrigger>
+                  <HoverCardContent className="w-80">
+                    <p className="text-sm text-muted-foreground">
+                      Click to generate a random motivational quote from our curated collection.
+                    </p>
+                  </HoverCardContent>
+                </HoverCard>
+              </div>
+              <div className="mx-0.5">
                 <Input
                   value={text}
                   onChange={onTextChange}
@@ -213,7 +213,7 @@ export function WallpaperControls({
                 />
               </div>
 
-              <div className="grid grid-cols-4 gap-4">
+              <div className="grid grid-cols-4 gap-4 mx-0.5">
                 <div>
                   <label className="text-sm text-muted-foreground block mb-2">Font Family</label>
                   <Select value={selectedFont} onValueChange={onFontChange}>
@@ -378,7 +378,7 @@ export function WallpaperControls({
                 <h3 className="font-medium">Size Settings</h3>
               </div>
             </AccordionTrigger>
-            <AccordionContent className="space-y-4">
+            <AccordionContent className="space-y-4 mx-0.5">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-muted-foreground">
