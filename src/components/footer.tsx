@@ -4,6 +4,7 @@ import { Logo } from '@/components/logo';
 import Link from 'next/link';
 import { MessageSquarePlus, ExternalLink } from 'lucide-react';
 import GridPattern from './ui/grid-pattern';
+import { useEffect, useState } from 'react';
 
 export const Footer = () => {
   const products = [
@@ -17,8 +18,17 @@ export const Footer = () => {
     }
   ];
 
+  const [isBrowser, setIsBrowser] = useState(true);
+
+  useEffect(() => {
+    // Check if we're in a browser environment
+    if (window?.navigator?.userAgent?.includes('Tauri')) {
+      setIsBrowser(false);
+    }
+  }, []);
+
   return (
-    <>
+    isBrowser ? (
       <div className="w-full px-4 pb-6 pt-4 overflow-visible relative mt-auto">
         <GridPattern strokeDasharray="4 2" />
         <footer className="relative max-w-7xl mx-auto rounded-2xl border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -57,10 +67,10 @@ export const Footer = () => {
               </ul>
             </div>
           </div>
-        </div>
-      </footer>
+          </div>
+        </footer>
 
-      {/* Floating Elements - Now in a fixed container */}
+        {/* Floating Elements - Now in a fixed container */}
       <div className="fixed bottom-0 left-0 right-0 z-50 pointer-events-none">
           {/* Feedback button */}
           <div className="absolute bottom-0 left-0 pointer-events-auto">
@@ -88,7 +98,7 @@ export const Footer = () => {
           </div>
         </div>
       </div>
-    </>
+    ) : null
   );
 };
 

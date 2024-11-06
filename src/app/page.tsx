@@ -428,7 +428,7 @@ export default function Home() {
                 textPosition={textPosition}
               />
               {randomizing && <LoadingOverlay message="Loading new background..." />}
-              {downloading && <LoadingOverlay message="Generating wallpaper..." />}
+              {downloading && <LoadingOverlay message="Downloading wallpaper..." />}
             </div>
           </div>
           <div className="order-1 lg:order-2 lg:sticky lg:top-4">
