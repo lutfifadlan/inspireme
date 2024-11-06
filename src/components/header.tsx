@@ -12,7 +12,7 @@ export function Header() {
 
   useEffect(() => {
     // Check if we're in a browser environment
-    if (!(window?.navigator?.userAgent?.includes('Tauri'))) {
+    if (window?.navigator?.userAgent?.includes('Tauri')) {
       setIsBrowser(false);
     }
   }, []);
