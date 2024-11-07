@@ -1,4 +1,4 @@
-import { GradientSettings } from "./interface";
+import { GradientSettings, WallpaperPreset } from "./interface";
 
 export const BACKGROUNDS = [
   "https://images.unsplash.com/photo-1469474968028-56623f02e42e",
@@ -124,9 +124,39 @@ export const MOTIVATIONAL_QUOTES = [
   "The only way to achieve your dreams is to work hard and never give up",
   "The only way to achieve your goals is to stay focused and never give up",
   "Just ship it",
+  "Sometimes you need to be up really high to understand how small you are",
+  "If you really believe in what you're doing, work hard, take nothing personally and if something blocks one route, find another",
+  "Too many of us are not living our dreams because we are living our fears",
+  "I suppose it is tempting, if the only tool you have is a hammer, to treat everything as if it were a nail",
+  "One day you will wake up and there won't be any more time to do the things you always wanted",
+  "Most people quit because they look how far they have to go, not how far they have come",
+  "People do not leave jobs, they leave their leader",
+  "Although the world is full of suffering, it is also full of the overcoming of it",
+  "No one has the power to shatter your dreams unless you give it to them",
+  "All things are difficult before they are easy",
+  "If you fear failure, you will never go anywhere",
+  "Failure is just practice for success",
+  "If you set your goals ridiculously high and it's a failure, you will fail above everyone else's success",
+  "Sometimes we have to stop being scared and just go for it",
+  "Failure is just practice for success",
+  "Failure is simply the opportunity to begin again, this time more intelligently",
+  "If things start happening, don't worry, don't stew, just go right along",
+  "Don't let small minds convince you that your dreams are too big",
+  "Insanity is doing the same thing over and over again and expecting different results",
+  "If we get rewarded only for results, not processes, we're going to be pretty miserable",
+  "Incredible things can be done simply if we are committed to making them happen",
+  "You can't climb the ladder of success with your hands in your pockets",
+  "It's not about where your starting point is, but your end goal and the journey",
+  "Don't let a bad day make you feel like you have a bad life",
+  "Stop managing your time, start managing your focus",
+  "You can't change the direction of the wind, but you can adjust your sails",
+  "Great things are done by a series of small things brought together",
+  "The only way to learn it is to do it",
+  "If you can remember why you started, then you will know why you must continue",
+  "The journey of a thousand miles begins with a single step"
 ];
 
-export const WALLPAPER_PRESETS = [
+export const WALLPAPER_PRESETS: WallpaperPreset[] = [
   {
     id: "desktop-4k",
     label: "Desktop 4K",
