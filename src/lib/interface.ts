@@ -23,3 +23,10 @@ export interface TextPosition {
   y: number;
   verticalAlignment: 'top' | 'center' | 'bottom';
 }
+
+export interface WallpaperPreset {
+  id: string;
+  label: string;
+  width: number;
+  height: number;
+}
